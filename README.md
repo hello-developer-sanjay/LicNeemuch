@@ -31,10 +31,10 @@
 
 ## 📋 Overview
 
-The **LIC Neemuch Website** (`https://lic-neemuch.in/`) is a serverless, SEO-optimized platform built to promote Jitendra Patidar’s Life Insurance Corporation (LIC) services in Neemuch district, Madhya Pradesh, and nearby areas (Manasa, Singoli, Javad, Mandsaur). Developed as a freelance Full Stack project (2024–2025), it showcases insurance plans (child, retirement, health, money-back, term) and agent recruitment opportunities, serving ~270,000 internet users in a ~900,000 population district.
+The **LIC Neemuch Website** (`https://licneemuch.space`) is a serverless, SEO-optimized platform built to promote Jitendra Patidar’s Life Insurance Corporation (LIC) services in Neemuch district, Madhya Pradesh, and nearby areas (Manasa, Singoli, Javad, Mandsaur). Developed as a freelance Full Stack project (2024–2025), it showcases insurance plans (child, retirement, health, money-back, term) and agent recruitment opportunities, serving ~270,000 internet users in a ~900,000 population district.
 
 Key highlights:
-- **SEO Success**: 8th Google ranking for “LIC Neemuch” queries, driving ~700 monthly visitors.
+- **SEO Success**: 2nd Google ranking for “LIC Neemuch” queries, driving ~700 monthly visitors.
 - **Conversions**: 80% inquiry conversion rate (~554 conversions/month) via forms and CTAs.
 - **Performance**: 100/100 PageSpeed scores and CLS 0.707 fixed for superior UX.
 - **Tech**: React, AWS Lambda, CloudFront, MongoDB, Node.js/Express, with server-side rendering (SSR).
