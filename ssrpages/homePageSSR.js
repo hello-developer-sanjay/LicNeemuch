@@ -1,6 +1,5 @@
 
 const express = require('express');
-const mongoose = require('mongoose');
 const compression = require('compression');
 const LICReview = require('../models/LICReview');
 const LICRating = require('../models/LICRating');
@@ -47,10 +46,6 @@ const escapeHTML = (str) => {
     .replace(/'/g, '&#39;');
 };
 
-
-
-
-
 const fetchRatingsAndReviews = async () => {
   try {
     const [reviews, ratings] = await Promise.all([
@@ -85,6 +80,7 @@ const fetchRatingsAndReviews = async () => {
   }
 };
 
+
 const renderStars = (rating) => {
   const starCount = Math.round(rating);
   return Array(5)
@@ -94,11 +90,10 @@ const renderStars = (rating) => {
 };
 
 router.get('/', async (req, res) => {
+  console.log('SSR route hit for / at', new Date().toISOString());
 
   try {
     const { averageRating, ratingCount, reviews , ratings} = await fetchRatingsAndReviews();
-    console.log(`Fetched ${reviews.length} reviews and ${ratings.length} ratings with average rating ${averageRating}`);
-    
     const pageUrl = 'https://licneemuch.space';
  const metaTitle = 'LIC Neemuch: Life Insurance & Pension Plans in Madhya Pradesh';
     const metaDescription =
@@ -108,9 +103,6 @@ router.get('/', async (req, res) => {
     const logoImage = 'https://d12uvtgcxr5qif.cloudfront.net/images/html_2025-06-12_5bc78c6a-1a4b-4908-a854-356cce5ac68f.webp';
     const metaKeywords =
       'LIC Neemuch, Jitendra Patidar, life insurance Neemuch, term plans, pension plans, child plans, ULIPs, financial planning Madhya Pradesh, LIC India, insurance agent Neemuch';
-
-
-
 const faqData = [
   {
     '@type': 'Question',
@@ -539,1238 +531,878 @@ const structuredData = {
   ]
 };
 
-
+      
 
 const htmlContent = `
- <header class="header" role="banner" itemscope itemtype="https://schema.org/WPHeader">
+
+<header class="header" role="banner" itemscope itemtype="https://schema.org/WPHeader">
     <nav class="navbar" aria-label="Main navigation">
       <div class="navbar-brand">
         <a href="/" class="nav-logo" aria-label="LIC Neemuch Homepage" itemprop="url">
           <img src="${logoImage}" alt="LIC Neemuch Branch Logo" class="logo-img" width="44" height="44" loading="eager" itemprop="logo">
-          <span lang="en" class="lang-visible" itemprop="name">LIC Neemuch</span>
-          <span lang="hi" class="lang-hidden" itemprop="name">एलआईसी नीमच</span>
+          <span itemprop="name">LIC Neemuch</span>
         </a>
         <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
-          <span lang="en" class="lang-visible nav-toggle-icon">☰</span>
-          <span lang="hi" class="lang-hidden nav-toggle-icon">☰</span>
+          <span class="nav-toggle-icon"></span>
         </button>
       </div>
       <div class="nav-menu" id="nav-menu">
-        <a href="/" class="nav-link active" aria-current="page">
-          <span lang="en" class="lang-visible">Home</span>
-          <span lang="hi" class="lang-hidden">होम</span>
-        </a>
-        <a href="/about" class="nav-link">
-          <span lang="en" class="lang-visible">About</span>
-          <span lang="hi" class="lang-hidden">हमारे बारे में</span>
-        </a>
-        <a href="/faqs" class="nav-link">
-          <span lang="en" class="lang-visible">LIC FAQs</span>
-          <span lang="hi" class="lang-hidden">एलआईसी प्रश्न</span>
-        </a>
-        <a href="/reviews" class="nav-link">
-          <span lang="en" class="lang-visible">Reviews</span>
-          <span lang="hi" class="lang-hidden">समीक्षाएँ</span>
-        </a>
-        <a href="/join" class="nav-link">
-          <span lang="en" class="lang-visible">Join as Agent</span>
-          <span lang="hi" class="lang-hidden">एजेंट के रूप में शामिल हों</span>
-        </a>
-        <a href="/services" class="nav-link">
-          <span lang="en" class="lang-visible">Services</span>
-          <span lang="hi" class="lang-hidden">सेवाएँ</span>
-        </a>
-        <a href="/bimasakhi" class="nav-link">
-          <span lang="en" class="lang-visible">Bima Sakhi Yojana</span>
-          <span lang="hi" class="lang-hidden">बीमा सखी योजना</span>
-        </a>
-      </div>
-      <div class="lang-toggle" aria-label="Language toggle">
-        <button class="lang-btn active" data-lang="en" aria-label="Switch to English">English</button>
-        <button class="lang-btn" data-lang="hi" aria-label="Switch to Hindi">हिन्दी</button>
+        <a href="/" class="nav-link active" aria-current="page" aria-label="Homepage">Home</a>
+        <a href="/reviews" class="nav-link" aria-label="Customer Reviews">Reviews</a>
+        <a href="/join" class="nav-link" aria-label="Join as LIC Agent">Join as Agent</a>
+        <a href="/services" class="nav-link" aria-label="Insurance Services">Services</a>
+        <a href="/about" class="nav-link" aria-label="About LIC Neemuch">About</a>
+        <a href="/faqs" class="nav-link" aria-label="LIC FAQs">LIC FAQs</a>
+        <a href="/bimasakhi" class="nav-link" aria-label="Bima Sakhi Yojana">Bima Sakhi Yojana</a>
       </div>
     </nav>
     <div class="hero-section" aria-labelledby="hero-title" itemscope itemtype="https://schema.org/WebPageElement">
       <div class="hero-content">
-        <h1 id="hero-title">
-          <span lang="en" class="lang-visible">Trusted Life Insurance Solutions at LIC Neemuch (Madhya Pradesh)</span>
-          <span lang="hi" class="lang-hidden">एलआईसी नीमच (मध्य प्रदेश) में विश्वसनीय जीवन बीमा समाधान</span>
-        </h1>
-        <p class="hero-subtitle" lang="en" class="lang-visible">
-          Under the expert guidance of <span class="highlight">Jitendra Patidar</span>, LIC Neemuch provides life insurance and financial planning to over <strong>50,000 policyholders</strong>. Located at <span class="highlight">Vikas Nagar, Neemuch (Madhya Pradesh)</span>, we offer personalized plans for families in <span class="highlight">Neemuch, Manasa, and Mandsaur</span>.
-        </p>
-        <p class="hero-subtitle" lang="hi" class="lang-hidden">
-          <span class="highlight">जितेंद्र पाटीदार</span> के विशेषज्ञ मार्गदर्शन में, एलआईसी नीमच <strong>50,000+ पॉलिसीधारकों</strong> को जीवन बीमा और वित्तीय योजना प्रदान करता है। <span class="highlight">विकास नगर, नीमच (मध्य प्रदेश)</span> में स्थित, हम <span class="highlight">नीमच, मनासा और मंदसौर</span> के परिवारों के लिए अनुकूलित योजनाएं प्रदान करते हैं।
-        </p>
+        <h1 id="hero-title" class="hero-title" lang="en">Trusted Life Insurance Solutions at LIC Neemuch (Madhya Pradesh)</h1>
+        <p class="hero-subtitle" lang="en">Under the expert guidance of <span class="highlight">Jitendra Patidar</span>, LIC Neemuch provides life insurance and financial planning to over <strong>50,000 policyholders</strong>. Located at <span class="highlight">Vikas Nagar, Neemuch (Madhya Pradesh)</span>, we offer personalized plans for families in <span class="highlight">Neemuch, Manasa, and Mandsaur</span>.</p>
+        <p class="hero-subtitle" lang="hi"><span class="highlight">जितेंद्र पाटीदार</span> के विशेषज्ञ मार्गदर्शन में, एलआईसी नीमच <strong>50,000+ पॉलिसीधारकों</strong> को जीवन बीमा और वित्तीय योजना प्रदान करता है। <span class="highlight">विकास नगर, नीमच</span> में स्थित, हम <span class="highlight">नीमच, मनासा और मंदसौर</span> के परिवारों के लिए अनुकूलित योजनाएं प्रदान करते हैं।</p>
         ${
-          Number(ratingCount) > 0 && Number(averageRating) >= 1
+          ratingCount > 0 && averageRating >= 1
             ? `
-        <div class="hero-rating" aria-label="Average rating ${averageRating} out of 5 based on ${ratingCount} reviews">
-          <span class="stars" aria-hidden="true">
-            ${typeof renderStars === 'function' ? renderStars(averageRating) : 'renderStars not found'}
-          </span>
-          <span class="rating-text">${averageRating}/5 (${ratingCount} reviews)</span>
-        </div>
-        `
+              <div class="hero-rating" aria-label="Average rating ${averageRating} out of 5 based on ${ratingCount} reviews">
+                <span class="stars" aria-hidden="true">${renderStars(averageRating)}</span>
+                <span class="rating-text">${averageRating}/5 (${ratingCount} reviews)</span>
+              </div>
+            `
             : ''
         }
         <div class="hero-cta">
-          <a href="tel:+917987235207" class="cta-button">
-            <span lang="en" class="lang-visible">Call Now</span>
-            <span lang="hi" class="lang-hidden">अभी कॉल करें</span>
-          </a>
-          <a href="/services" class="cta-button secondary">
-            <span lang="en" class="lang-visible">Explore Plans</span>
-            <span lang="hi" class="lang-hidden">योजनाएं देखें</span>
-          </a>
-          <a href="https://wa.me/917987235207" target="_blank" rel="noopener noreferrer" class="cta-button secondary">
-            <span lang="en" class="lang-visible">WhatsApp Chat</span>
-            <span lang="hi" class="lang-hidden">व्हाट्सएप चैट</span>
-          </a>
+          <a href="tel:+917987235207" class="cta-button" aria-label="Call LIC Neemuch Customer Care" itemprop="telephone">Call Now</a>
+          <a href="/services" class="cta-button secondary" aria-label="Explore LIC Insurance Plans">Explore Plans</a>
+          <a href="https://wa.me/917987235207" target="_blank" rel="noopener noreferrer" class="cta-button secondary" aria-label="Chat with LIC Neemuch on WhatsApp">WhatsApp Chat</a>
         </div>
       </div>
       <div class="hero-image">
         <img src="${metaImage}" alt="Jitendra Patidar at LIC Neemuch Branch Office" loading="eager" width="500" height="333" onerror="this.src='https://via.placeholder.com/500x333?text=Image+Not+Found';" itemprop="image">
       </div>
     </div>
-  </header>
-  <div class="container">
-    <aside class="sidebar" aria-label="Section navigation">
-      <button class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="true">
-        <span lang="en" class="lang-visible sidebar-toggle-icon">☰</span>
-        <span lang="hi" class="lang-hidden sidebar-toggle-icon">☰</span>
-      </button>
-      <nav class="sidebar-nav" aria-label="Section links">
-        <a href="#welcome" class="sidebar-link">
-          <span lang="en" class="lang-visible">Welcome</span>
-          <span lang="hi" class="lang-hidden">स्वागत</span>
-        </a>
-        <a href="#why-choose" class="sidebar-link">
-          <span lang="en" class="lang-visible">Why Choose Us</span>
-          <span lang="hi" class="lang-hidden">हमें क्यों चुनें</span>
-        </a>
-        <a href="#about" class="sidebar-link">
-          <span lang="en" class="lang-visible">About</span>
-          <span lang="hi" class="lang-hidden">हमारे बारे में</span>
-        </a>
-        <a href="#jitendra" class="sidebar-link">
-          <span lang="en" class="lang-visible">Jitendra</span>
-          <span lang="hi" class="lang-hidden">जितेंद्र</span>
-        </a>
-        <a href="#services" class="sidebar-link">
-          <span lang="en" class="lang-visible">Services</span>
-          <span lang="hi" class="lang-hidden">सेवाएँ</span>
-        </a>
-        <a href="#architecture" class="sidebar-link">
-          <span lang="en" class="lang-visible">Architecture</span>
-          <span lang="hi" class="lang-hidden">संरचना</span>
-        </a>
-        <a href="#team" class="sidebar-link">
-          <span lang="en" class="lang-visible">Team</span>
-          <span lang="hi" class="lang-hidden">टीम</span>
-        </a>
-        <a href="#market" class="sidebar-link">
-          <span lang="en" class="lang-visible">Market</span>
-          <span lang="hi" class="lang-hidden">बाजार</span>
-        </a>
-        <a href="#social" class="sidebar-link">
-          <span lang="en" class="lang-visible">Social</span>
-          <span lang="hi" class="lang-hidden">सामाजिक</span>
-        </a>
-        <a href="#testimonials" class="sidebar-link">
-          <span lang="en" class="lang-visible">Testimonials</span>
-          <span lang="hi" class="lang-hidden">प्रशंसापत्र</span>
-        </a>
-        <a href="#calculator" class="sidebar-link">
-          <span lang="en" class="lang-visible">Calculator</span>
-          <span lang="hi" class="lang-hidden">कैलकुलेटर</span>
-        </a>
-        <a href="#resources" class="sidebar-link">
-          <span lang="en" class="lang-visible">Resources</span>
-          <span lang="hi" class="lang-hidden">संसाधन</span>
-        </a>
-        <a href="#contact" class="sidebar-link">
-          <span lang="en" class="lang-visible">Contact</span>
-          <span lang="hi" class="lang-hidden">संपर्क</span>
-        </a>
-        <a href="#faq" class="sidebar-link">
-          <span lang="en" class="lang-visible">FAQs</span>
-          <span lang="hi" class="lang-hidden">प्रश्न</span>
-        </a>
-      </nav>
-    </aside>
-    <main role="main" itemscope itemtype="https://schema.org/LocalBusiness">
-      <meta itemprop="name" content="LIC Neemuch">
-      <meta itemprop="url" content="https://licneemuch.space">
-      <meta itemprop="address" content="Vikas Nagar, Neemuch, MP 458441">
-      <meta itemprop="telephone" content="+917987235207">
-      <meta itemprop="email" content="licneemuch343@licindia.com">
-      <meta itemprop="openingHours" content="Mo-Sa 10:00-17:00">
-      <article aria-labelledby="welcome-heading">
-        <section class="section welcome-section" id="welcome" aria-labelledby="welcome-heading">
-          <h2 id="welcome-heading">
-            <span lang="en" class="lang-visible">Welcome to LIC Neemuch – Your Partner in Financial Security</span>
-            <span lang="hi" class="lang-hidden">एलआईसी नीमच में आपका स्वागत है – वित्तीय सुरक्षा में आपका साथी</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            At LIC Neemuch, we are committed to safeguarding the financial future of families in <span class="highlight">Neemuch, Madhya Pradesh</span>. Led by <span class="highlight">Jitendra Patidar</span>, our branch serves over <strong>50,000 policyholders</strong> across <span class="highlight">Neemuch, Manasa, Singoli, and Mandsaur</span>. For <strong>life insurance, pension plans, or child plans</strong>, visit us at <span class="highlight">Vikas Nagar, Neemuch (Madhya Pradesh)</span>. Contact us at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            एलआईसी नीमच में, हम <span class="highlight">नीमच, मध्य प्रदेश</span> के परिवारों के वित्तीय भविष्य की रक्षा के लिए प्रतिबद्ध हैं। <span class="highlight">जितेंद्र पाटीदार</span> के नेतृत्व में, हमारी शाखा <span class="highlight">नीमच, मनासा, सिंगोली, और मंदसौर</span> में <strong>50,000+ पॉलिसीधारकों</strong> की सेवा करती है। <strong>जीवन बीमा, पेंशन योजनाएं, या चाइल्ड प्लान</strong> के लिए, <span class="highlight">विकास नगर, नीमच</span> पर आएं। <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें।
-          </p>
-          <p lang="en" class="lang-visible">
-            Choose LIC Neemuch for your insurance needs due to our high claim settlement ratio of <strong>98.62%</strong> (FY 2020-21), over <strong>150 trained agents</strong>, complimentary consultations, and extensive rural outreach in areas like <span class="highlight">Sarwaniya Maharaj</span> and <span class="highlight">Ratangarh</span>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            <strong>98.62%</strong> (वित्त वर्ष 2020-21) के उच्च दावा निपटान अनुपात, <strong>150+ प्रशिक्षित एजेंट</strong>, मुफ्त परामर्श, और <span class="highlight">सरवानिया महाराज</span> और <span class="highlight">रतनगढ़</span> जैसे क्षेत्रों में व्यापक ग्रामीण पहुंच के कारण एलआईसी नीमच चुनें।
-          </p>
-          <a href="/services" class="cta-button secondary">
-            <span lang="en" class="lang-visible">Discover Plans</span>
-            <span lang="hi" class="lang-hidden">योजनाएं देखें</span>
-          </a>
-        </section>
-      </article>
-      <article aria-labelledby="why-choose-heading">
-        <section class="section why-choose-section" id="why-choose" aria-labelledby="why-choose-heading">
-          <h2 id="why-choose-heading">
-            <span lang="en" class="lang-visible">Why LIC Neemuch Stands Out</span>
-            <span lang="hi" class="lang-hidden">एलआईसी नीमच क्यों अलग है</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            LIC Neemuch combines local expertise with the trust of <strong>Life Insurance Corporation of India</strong>. As a leading insurance provider in <span class="highlight">Madhya Pradesh</span>, we prioritize financial security for residents of <span class="highlight">Neemuch Chawni, Manasa, and beyond</span>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            एलआईसी नीमच स्थानीय विशेषज्ञता को <strong>भारतीय जीवन बीमा निगम</strong> के विश्वास के साथ जोड़ता है। <span class="highlight">मध्य प्रदेश</span> में अग्रणी बीमा प्रदाता के रूप में, हम <span class="highlight">नीमच चावनी, मनासा और उससे आगे</span> के निवासियों के लिए वित्तीय सुरक्षा को प्राथमिकता देते हैं।
-          </p>
-          <div class="card-grid">
-            <div class="card">
-              <h3>
-                <span lang="en" class="lang-visible">Experienced Leadership</span>
-                <span lang="hi" class="lang-hidden">अनुभवी नेतृत्व</span>
-              </h3>
-              <p lang="en" class="lang-visible">
-                Guided by <span class="highlight">Jitendra Patidar</span>, a Chairman’s Club member with over <strong>10 years of expertise</strong>.
-              </p>
-              <p lang="hi" class="lang-hidden">
-                <span class="highlight">जितेंद्र पाटीदार</span> के मार्गदर्शन में, जो <strong>10+ वर्षों की विशेषज्ञता</strong> के साथ चेयरमैन क्लब सदस्य हैं।
-              </p>
-            </div>
-            <div class="card">
-              <h3>
-                <span lang="en" class="lang-visible">Strong Local Presence</span>
-                <span lang="hi" class="lang-hidden">मजबूत स्थानीय उपस्थिति</span>
-              </h3>
-              <p lang="en" class="lang-visible">
-                Located at <span class="highlight">Vikas Nagar, Neemuch (Madhya Pradesh)</span>, serving <span class="highlight">Manasa, Singoli, and Mandsaur</span>.
-              </p>
-              <p lang="hi" class="lang-hidden">
-                <span class="highlight">विकास नगर, नीमच</span> में स्थित, <span class="highlight">मनासा, सिंगोली और मंदसौर</span> की सेवा।
-              </p>
-            </div>
-            <div class="card">
-              <h3>
-                <span lang="en" class="lang-visible">Exceptional Support</span>
-                <span lang="hi" class="lang-hidden">उत्कृष्ट समर्थन</span>
-              </h3>
-              <p lang="en" class="lang-visible">
-                Contact our customer care at <a href="tel:+917987235207" class="content-link">+91 7987235207</a> or LIC’s <strong>24x7 toll-free line</strong> at <a href="tel:+911125750500" class="content-link">+91 1125750500</a>.
-              </p>
-              <p lang="hi" class="lang-hidden">
-                हमारी ग्राहक सेवा से <a href="tel:+917987235207" class="content-link">+91 7987235207</a> या एलआईसी की <strong>24x7 टोल-फ्री लाइन</strong> <a href="tel:+911125750500" class="content-link">+91 1125750500</a> पर संपर्क करें।
-              </p>
-            </div>
+</header>
+<div class="container">
+  <aside class="sidebar" aria-label="Section navigation">
+    <button class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="true">
+      <span class="sidebar-toggle-icon">☰</span>
+    </button>
+    <nav class="sidebar-nav" aria-label="Section links">
+      <a href="#welcome" class="sidebar-link" aria-label="Welcome Section">Welcome</a>
+      <a href="#why-choose" class="sidebar-link" aria-label="Why Choose LIC Neemuch">Why Choose Us</a>
+      <a href="#about" class="sidebar-link" aria-label="About LIC Neemuch">About</a>
+      <a href="#jitendra" class="sidebar-link" aria-label="Jitendra Patidar">Jitendra</a>
+      <a href="#services" class="sidebar-link" aria-label="Insurance Services">Services</a>
+      <a href="#architecture" class="sidebar-link" aria-label="Operational Architecture">Architecture</a>
+      <a href="#team" class="sidebar-link" aria-label="Our Team">Team</a>
+      <a href="#market" class="sidebar-link" aria-label="Market Presence">Market</a>
+      <a href="#social" class="sidebar-link" aria-label="Social Initiatives">Social</a>
+      <a href="#testimonials" class="sidebar-link" aria-label="Client Testimonials">Testimonials</a>
+      <a href="#calculator" class="sidebar-link" aria-label="Premium Calculator">Calculator</a>
+      <a href="#resources" class="sidebar-link" aria-label="LIC Resources">Resources</a>
+      <a href="#contact" class="sidebar-link" aria-label="Contact LIC Neemuch">Contact</a>
+      <a href="#faq" class="sidebar-link" aria-label="FAQs">FAQs</a>
+    </nav>
+  </aside>
+  <main role="main" itemscope itemtype="https://schema.org/LocalBusiness">
+    <meta itemprop="name" content="LIC Neemuch">
+    <meta itemprop="url" content="https://licneemuch.space">
+    <meta itemprop="telephone" content="+917987235207">
+    <meta itemprop="email" content="licneemuch343@licindia.com">
+    <meta itemprop="address" content="Vikas Nagar, Neemuch, MP 458441">
+    <meta itemprop="openingHours" content="Mo-Sa 10:00-17:00">
+    <article aria-labelledby="welcome-heading">
+      <section class="section welcome-section" id="welcome" aria-labelledby="welcome-heading">
+        <h2 id="welcome-heading">Welcome to LIC Neemuch – Your Partner in Financial Security</h2>
+        <p lang="en">
+          At LIC Neemuch, we are committed to safeguarding the financial future of families in <span class="highlight">Neemuch, Madhya Pradesh</span>. Led by <span class="highlight">Jitendra Patidar</span>, our branch serves over <strong>50,000 policyholders</strong> across <span class="highlight">Neemuch, Manasa, Singoli, and Mandsaur</span>. For <strong>life insurance, pension plans, or child plans</strong>, visit us at <span class="highlight">Vikas Nagar, Neemuch (Madhya Pradesh)</span>. Contact us at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
+        </p>
+        <p lang="hi">
+          एलआईसी नीमच में, हम <span class="highlight">नीमच, मध्य प्रदेश</span> के परिवारों के वित्तीय भविष्य की रक्षा के लिए प्रतिबद्ध हैं। <span class="highlight">जितेंद्र पाटीदार</span> के नेतृत्व में, हमारी शाखा <span class="highlight">नीमच, मनासा, सिंगोली, और मंदसौर</span> में <strong>50,000+ पॉलिसीधारकों</strong> की सेवा करती है। <strong>जीवन बीमा, पेंशन योजनाएं, या चाइल्ड प्लान</strong> के लिए, <span class="highlight">विकास नगर, नीमच</span> पर आएं। <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें।
+        </p>
+        <p lang="en">Choose LIC Neemuch for your insurance needs due to our high claim settlement ratio of <strong>98.62%</strong> (FY 2020-21), over <strong>150 trained agents</strong>, complimentary consultations, and extensive rural outreach in areas like <span class="highlight">Sarwaniya Maharaj</span> and <span class="highlight">Ratangarh</span>.</p>
+        <p lang="hi"><strong>98.62%</strong> (वित्त वर्ष 2020-21) के उच्च दावा निपटान अनुपात, <strong>150+ प्रशिक्षित एजेंट</strong>, मुफ्त परामर्श, और <span class="highlight">सरवानिया महाराज</span> और <span class="highlight">रतनगढ़</span> जैसे क्षेत्रों में व्यापक ग्रामीण पहुंच के कारण एलआईसी नीमच चुनें।</p>
+        <a href="/services" class="cta-button secondary" aria-label="Discover LIC Plans in Neemuch">Discover Plans</a>
+      </section>
+    </article>
+    <article aria-labelledby="why-choose-heading">
+      <section class="section why-choose-section" id="why-choose" aria-labelledby="why-choose-heading">
+        <h2 id="why-choose-heading">Why LIC Neemuch Stands Out</h2>
+        <p lang="en">
+          LIC Neemuch combines local expertise with the trust of <strong>Life Insurance Corporation of India</strong>. As a leading insurance provider in <span class="highlight">Madhya Pradesh</span>, we prioritize financial security for residents of <span class="highlight">Neemuch Chawni, Manasa, and beyond</span>.
+        </p>
+        <p lang="hi">
+          एलआईसी नीमच स्थानीय विशेषज्ञता को <strong>भारतीय जीवन बीमा निगम</strong> के विश्वास के साथ जोड़ता है। <span class="highlight">मध्य प्रदेश</span> में अग्रणी बीमा प्रदाता के रूप में, हम <span class="highlight">नीमच चावनी, मनासा और उससे आगे</span> के निवासियों के लिए वित्तीय सुरक्षा को प्राथमिकता देते हैं।
+        </p>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Experienced Leadership</h3>
+            <p lang="en">Guided by <span class="highlight">Jitendra Patidar</span>, a Chairman’s Club member with over <strong>10 years of expertise</strong>.</p>
+            <p lang="hi"><span class="highlight">जितेंद्र पाटीदार</span> के मार्गदर्शन में, जो <strong>10+ वर्षों की विशेषज्ञता</strong> के साथ चेयरमैन क्लब सदस्य हैं।</p>
           </div>
-          <a href="/about" class="cta-button secondary">
-            <span lang="en" class="lang-visible">About Us</span>
-            <span lang="hi" class="lang-hidden">हमारे बारे में</span>
-          </a>
-        </section>
-      </article>
-      <article aria-labelledby="about-heading">
-        <section class="section about-section" id="about" aria-labelledby="about-heading">
-          <h2 id="about-heading">
-            <span lang="en" class="lang-visible">About LIC Neemuch – A Legacy of Trust</span>
-            <span lang="hi" class="lang-hidden">एलआईसी नीमच के बारे में – विश्वास की विरासत</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            Part of <strong>Life Insurance Corporation of India</strong> (est. 1956), LIC Neemuch is a pillar of financial stability in <span class="highlight">Madhya Pradesh</span>. With assets worth <strong>₹54.52 trillion</strong> (FY25), our branch (code 343) at <span class="highlight">Vikas Nagar, Neemuch, MP 458441</span> serves over <strong>50,000 policyholders</strong>. Reach us at <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a> or <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            <strong>भारतीय जीवन बीमा निगम</strong> (स्थापना 1956) का हिस्सा, एलआईसी नीमच <span class="highlight">मध्य प्रदेश</span> में वित्तीय स्थिरता का एक स्तंभ है। <strong>₹54.52 लाख करोड़</strong> (FY25) की संपत्ति के साथ, हमारी शाखा (कोड 343) <span class="highlight">विकास नगर, नीमच, एमपी 458441</span> में <strong>50,000+ पॉलिसीधारकों</strong> की सेवा करती है। <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a> या <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें।
-          </p>
-          <p lang="en" class="lang-visible">
-            For decades, we’ve fostered trust through insurance camps during <span class="highlight">Navratri</span> and <span class="highlight">Diwali</span>, extending outreach to rural areas like <span class="highlight">Sarwaniya Maharaj</span> and <span class="highlight">Ratangarh</span> near <span class="highlight">Kileshwar Temple</span>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            दशकों से, हमने <span class="highlight">नवरात्रि</span> और <span class="highlight">दिवाली</span> के दौरान बीमा शिविरों के माध्यम से विश्वास को बढ़ावा दिया है, जो <span class="highlight">किलेश्वर मंदिर</span> के पास <span class="highlight">सरवानिया महाराज</span> और <span class="highlight">रतनगढ़</span> जैसे ग्रामीण क्षेत्रों तक फैली है।
-          </p>
-          <table class="data-table table-responsive">
-            <caption>
-              <span lang="en" class="lang-visible">LIC Neemuch Branch Overview</span>
-              <span lang="hi" class="lang-hidden">एलआईसी नीमच शाखा अवलोकन</span>
-            </caption>
-            <thead>
-              <tr>
-                <th>
-                  <span lang="en" class="lang-visible">Detail</span>
-                  <span lang="hi" class="lang-hidden">विवरण</span>
-                </th>
-                <th>
-                  <span lang="en" class="lang-visible">Information</span>
-                  <span lang="hi" class="lang-hidden">जानकारी</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Branch Code</span>
-                  <span lang="hi" class="lang-hidden">शाखा कोड</span>
-                </td>
-                <td>343</td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Address</span>
-                  <span lang="hi" class="lang-hidden">पता</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">Vikas Nagar, Neemuch (Madhya Pradesh) 458441</span>
-                  <span lang="hi" class="lang-hidden">विकास नगर, नीमच (मध्य प्रदेश) 458441</span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Phone</span>
-                  <span lang="hi" class="lang-hidden">फोन</span>
-                </td>
-                <td>+91 7987235207</td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Email</span>
-                  <span lang="hi" class="lang-hidden">ईमेल</span>
-                </td>
-                <td>licneemuch343@licindia.com</td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Divisional Office</span>
-                  <span lang="hi" class="lang-hidden">डिवीजनल कार्यालय</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">Indore, +91 731 252 3511, bo_31c@licindia.com</span>
-                  <span lang="hi" class="lang-hidden">इंदौर, +91 731 252 3511, bo_31c@licindia.com</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <a href="/faqs" class="cta-button secondary">
-            <span lang="en" class="lang-visible">Find Answers</span>
-            <span lang="hi" class="lang-hidden">उत्तर ढूंढें</span>
-          </a>
-        </section>
-      </article>
-      <article aria-labelledby="jitendra-heading">
-        <section class="section jitendra-section" id="jitendra" aria-labelledby="jitendra-heading">
-          <h2 id="jitendra-heading">
-            <span lang="en" class="lang-visible">Meet Jitendra Patidar – Expert Advisor</span>
-            <span lang="hi" class="lang-hidden">जितेंद्र पाटीदार से मिलें – विशेषज्ञ सलाहकार</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            <span class="highlight">Jitendra Patidar</span>, Development Officer at LIC Neemuch, offers over <strong>10 years of experience</strong> in insurance planning. A <strong>Chairman’s Club member</strong> (2020), he specializes in <strong>term insurance, pension plans, and child plans</strong>. Schedule a consultation at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            <span class="highlight">जितेंद्र पाटीदार</span>, एलआईसी नीमच के डेवलपमेंट ऑफिसर, बीमा योजना में <strong>10 वर्षों से अधिक का अनुभव</strong> प्रदान करते हैं। <strong>चेयरमैन क्लब सदस्य</strong> (2020) के रूप में, वे <strong>टर्म बीमा, पेंशन योजनाएं, और चाइल्ड प्लान</strong> में विशेषज्ञ हैं। <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर परामर्श बुक करें।
-          </p>
-          <div class="card-grid">
-            <div class="card">
-              <p>
-                <strong>
-                  <span lang="en" class="lang-visible">Notable Achievements:</span>
-                  <span lang="hi" class="lang-hidden">उल्लेखनीय उपलब्धियां:</span>
-                </strong>
-                <span lang="en" class="lang-visible">Top Development Officer Award (2022), Rural Outreach Excellence (2023).</span>
-                <span lang="hi" class="lang-hidden">शीर्ष डेवलपमेंट ऑफिसर पुरस्कार (2022), ग्रामीण आउटरीच उत्कृष्टता (2023)।</span>
-              </p>
-            </div>
-            <div class="card">
-              <p>
-                <strong>
-                  <span lang="en" class="lang-visible">Specialized Expertise:</span>
-                  <span lang="hi" class="lang-hidden">विशेषज्ञता:</span>
-                </strong>
-                <span lang="en" class="lang-visible">Term Plans (New Jeevan Amar), Pension Plans (Jeevan Shanti).</span>
-                <span lang="hi" class="lang-hidden">टर्म योजनाएं (न्यू जीवन अमर), पेंशन योजनाएं (जीवन शांति)।</span>
-              </p>
-            </div>
+          <div class="card">
+            <h3>Strong Local Presence</h3>
+            <p lang="en">Located at <span class="highlight">Vikas Nagar, Neemuch (Madhya Pradesh)</span>, serving <span class="highlight">Manasa, Singoli, and Mandsaur</span>.</p>
+            <p lang="hi"><span class="highlight">विकास नगर, नीमच</span> में स्थित, <span class="highlight">मनासा, सिंगोली और मंदसौर</span> की सेवा।</p>
           </div>
-          <div class="timeline">
-            <p>
-              <strong>
-                <span lang="en" class="lang-visible">Career Milestones:</span>
-                <span lang="hi" class="lang-hidden">कैरियर मील के पत्थर:</span>
-              </strong>
-            </p>
-            <ol>
-              <li>
-                <span>2015:</span>
-                <span lang="en" class="lang-visible">Joined LIC as Development Officer</span>
-                <span lang="hi" class="lang-hidden">एलआईसी में डेवलपमेंट ऑफिसर के रूप में शामिल हुए</span>
-              </li>
-              <li>
-                <span>2020:</span>
-                <span lang="en" class="lang-visible">Earned Chairman’s Club Membership</span>
-                <span lang="hi" class="lang-hidden">चेयरमैन क्लब सदस्यता प्राप्त की</span>
-              </li>
-              <li>
-                <span>2023:</span>
-                <span lang="en" class="lang-visible">Led 50+ rural insurance campaigns</span>
-                <span lang="hi" class="lang-hidden">50+ ग्रामीण बीमा अभियान का नेतृत्व किया</span>
-              </li>
-            </ol>
-          </div>
-          <a href="/about#jitendra" class="cta-button secondary">
-            <span lang="en" class="lang-visible">More About Jitendra</span>
-            <span lang="hi" class="lang-hidden">जितेंद्र के बारे में और जानें</span>
-          </a>
-        </section>
-      </article>
-      <article aria-labelledby="services-heading">
-        <section class="section services-section" id="services" aria-labelledby="services-heading">
-          <h2 id="services-heading">
-            <span lang="en" class="lang-visible">Comprehensive Insurance Plans</span>
-            <span lang="hi" class="lang-hidden">व्यापक बीमा योजनाएं</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            LIC Neemuch branch offers a range of <strong>insurance plans</strong> for residents of <span class="highlight">Neemuch Chawni, Manasa, and Mandsaur</span>. From <strong>term insurance</strong> to <strong>ULIPs</strong>, our plans meet diverse financial goals. Contact us at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            एलआईसी नीमच शाखा <span class="highlight">नीमच चावनी, मनासा और मंदसौर</span> के निवासियों के लिए <strong>बीमा योजनाओं</strong> की श्रृंखला प्रदान करती है। <strong>टर्म बीमा</strong> से लेकर <strong>यूलिप</strong> तक, हमारी योजनाएं विभिन्न वित्तीय लक्ष्यों को पूरा करती हैं। <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें।
-          </p>
-          <table class="data-table table-responsive">
-            <caption>
-              <span lang="en" class="lang-visible">Popular LIC Plans at Neemuch Branch</span>
-              <span lang="hi" class="lang-hidden">नीमच शाखा में लोकप्रिय एलआईसी योजनाएं</span>
-            </caption>
-            <thead>
-              <tr>
-                <th>
-                  <span lang="en" class="lang-visible">Plan Type</span>
-                  <span lang="hi" class="lang-hidden">योजना प्रकार</span>
-                </th>
-                <th>
-                  <span lang="en" class="lang-visible">Key Plans</span>
-                  <span lang="hi" class="lang-hidden">मुख्य योजनाएं</span>
-                </th>
-                <th>
-                  <span lang="en" class="lang-visible">Benefits</span>
-                  <span lang="hi" class="lang-hidden">लाभ</span>
-                </th>
-                <th>
-                  <span lang="en" class="lang-visible">Premium Range</span>
-                  <span lang="hi" class="lang-hidden">प्रीमियम रेंज</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Term Insurance</span>
-                  <span lang="hi" class="lang-hidden">टर्म बीमा</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">New Jeevan Amar, Saral Jeevan</span>
-                  <span lang="hi" class="lang-hidden">न्यू जीवन अमर, सरल जीवन</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">High coverage, affordable premiums</span>
-                  <span lang="hi" class="lang-hidden">उच्च कवरेज, किफायती प्रीमियम</span>
-                </td>
-                <td>₹5,000–₹50,000</td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Pension Plans</span>
-                  <span lang="hi" class="lang-hidden">पेंशन योजनाएं</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">Jeevan Shanti, Saral Pension</span>
-                  <span lang="hi" class="lang-hidden">जीवन शांति, सरल पेंशन</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">Guaranteed lifelong income</span>
-                  <span lang="hi" class="lang-hidden">गारंटीकृत आजीवन आय</span>
-                </td>
-                <td>₹20,000–₹2 lakh</td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Child Plans</span>
-                  <span lang="hi" class="lang-hidden">चाइल्ड प्लान</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">Jeevan Tarun, Money Back</span>
-                  <span lang="hi" class="lang-hidden">जीवन तरुण, मनी बैक</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">Funds for education and future</span>
-                  <span lang="hi" class="lang-hidden">शिक्षा और भविष्य के लिए धन</span>
-                </td>
-                <td>₹15,000–₹1 lakh</td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">ULIPs</span>
-                  <span lang="hi" class="lang-hidden">यूलिप</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">SIIP, Pension Plus</span>
-                  <span lang="hi" class="lang-hidden">एसआईआईपी, पेंशन प्लस</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">Market-linked returns</span>
-                  <span lang="hi" class="lang-hidden">बाजार से जुड़े रिटर्न</span>
-                </td>
-                <td>₹25,000–₹5 lakh</td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Micro-Insurance</span>
-                  <span lang="hi" class="lang-hidden">सूक्ष्म बीमा</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">Jeevan Dhara</span>
-                  <span lang="hi" class="lang-hidden">जीवन धारा</span>
-                </td>
-                <td>
-                  <span lang="en" class="lang-visible">Low-cost coverage for all</span>
-                  <span lang="hi" class="lang-hidden">सभी के लिए कम लागत वाला कवरेज</span>
-                </td>
-                <td>₹1,000–₹10,000</td>
-              </tr>
-            </tbody>
-          </table>
-          <a href="/services" class="cta-button secondary">
-            <span lang="en" class="lang-visible">Explore All Plans</span>
-            <span lang="hi" class="lang-hidden">सभी योजनाएं देखें</span>
-          </a>
-        </section>
-      </article>
-      <article aria-labelledby="architecture-heading">
-        <section class="section architecture-section" id="architecture" aria-labelledby="architecture-heading">
-          <h2 id="architecture-heading">
-            <span lang="en" class="lang-visible">Our Service Model</span>
-            <span lang="hi" class="lang-hidden">हमारा सेवा मॉडल</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            LIC Neemuch delivers seamless insurance services through a <strong>client-centric approach</strong>, using <strong>digital tools</strong>, a robust agent network, and rural outreach programs across <span class="highlight">Neemuch and Mandsaur</span>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            एलआईसी नीमच <strong>ग्राहक-केंद्रित दृष्टिकोण</strong> के माध्यम से निर्बाध बीमा सेवाएं प्रदान करता है, जो <strong>डिजिटल उपकरणों</strong>, मजबूत एजेंट नेटवर्क, और <span class="highlight">नीमच और मंदसौर</span> में ग्रामीण आउटरीच कार्यक्रमों का लाभ उठाता है।
-          </p>
-          <p>
-            <strong>
-              <span lang="en" class="lang-visible">Client Onboarding Process:</span>
-              <span lang="hi" class="lang-hidden">ग्राहक शामिल करने की प्रक्रिया:</span>
-            </strong>
-          </p>
-          <pre class="diagram">
-+--------------------+
-| <span lang="en" class="lang-visible">Client Inquiry</span><span lang="hi" class="lang-hidden">ग्राहक पूछताछ</span>     |
-+---------+----------+
-          |
-          v
-+--------------------+
-| <span lang="en" class="lang-visible">Consultation</span><span lang="hi" class="lang-hidden">परामर्श</span>       |
-| <span lang="en" class="lang-visible">(Jitendra/Agents)</span><span lang="hi" class="lang-hidden">(जितेंद्र/एजेंट)</span>  |
-+---------+----------+
-          |
-          v
-+--------------------+
-| <span lang="en" class="lang-visible">Plan Selection</span><span lang="hi" class="lang-hidden">योजना चयन</span>     |
-| <span lang="en" class="lang-visible">(Term, Pension)</span><span lang="hi" class="lang-hidden">(टर्म, पेंशन)</span>    |
-+---------+----------+
-          |
-          v
-+--------------------+
-| <span lang="en" class="lang-visible">Policy Issuance</span><span lang="hi" class="lang-hidden">पॉलिसी जारी करना</span>    |
-| <span lang="en" class="lang-visible">(Digital Portal)</span><span lang="hi" class="lang-hidden">(डिजिटल पोर्टल)</span>   |
-+--------------------+
-          </pre>
-          <p>
-            <strong>
-              <span lang="en" class="lang-visible">Efficient Claims Processing:</span>
-              <span lang="hi" class="lang-hidden">कुशल दावा प्रसंस्करण:</span>
-            </strong>
-          </p>
-          <pre class="diagram">
-+--------------------+
-| <span lang="en" class="lang-visible">Claim Submission</span><span lang="hi" class="lang-hidden">दावा जमा करना</span>   |
-+---------+----------+
-          |
-          v
-+--------------------+
-| <span lang="en" class="lang-visible">Verification</span><span lang="hi" class="lang-hidden">सत्यापन</span>       |
-| <span lang="en" class="lang-visible">(Documents)</span><span lang="hi" class="lang-hidden">(दस्तावेज़)</span>        |
-+---------+----------+
-          |
-          v
-+--------------------+
-| <span lang="en" class="lang-visible">Approval</span><span lang="hi" class="lang-hidden">अनुमोदन</span>           |
-| <span lang="en" class="lang-visible">(98.62% Success)</span><span lang="hi" class="lang-hidden">(98.62% सफलता)</span>   |
-+---------+----------+
-          |
-          v
-+--------------------+
-| <span lang="en" class="lang-visible">Payout</span><span lang="hi" class="lang-hidden">भुगतान</span>             |
-| <span lang="en" class="lang-visible">(Bank Transfer)</span><span lang="hi" class="lang-hidden">(बैंक हस्तांतरण)</span>    |
-+--------------------+
-          </pre>
-          <p>
-            <strong>
-              <span lang="en" class="lang-visible">Rural Outreach Initiatives:</span>
-              <span lang="hi" class="lang-hidden">ग्रामीण आउटरीच पहल:</span>
-            </strong>
-          </p>
-          <pre class="diagram">
-+--------------------+
-| <span lang="en" class="lang-visible">Awareness Camps</span><span lang="hi" class="lang-hidden">जागरूकता शिविर</span>    |
-| <span lang="en" class="lang-visible">(Sarwaniya, Ratangarh)</span><span lang="hi" class="lang-hidden">(सरवानिया, रतनगढ़)</span> |
-+---------+----------+
-          |
-          v
-+--------------------+
-| <span lang="en" class="lang-visible">Micro-Insurance</span><span lang="hi" class="lang-hidden">सूक्ष्म बीमा</span>    |
-| <span lang="en" class="lang-visible">(Jeevan Dhara)</span><span lang="hi" class="lang-hidden">(जीवन धारा)</span>     |
-+---------+----------+
-          |
-          v
-+--------------------+
-| <span lang="en" class="lang-visible">Enrollments</span><span lang="hi" class="lang-hidden">नामांकन</span>        |
-| <span lang="en" class="lang-visible">(PMJBY, PMSBY)</span><span lang="hi" class="lang-hidden">(पीएमजेबीवाय, पीएमएसबीवाय)</span>     |
-+--------------------+
-          </pre>
-        </section>
-      </article>
-      <article aria-labelledby="team-heading">
-        <section class="section team-section" id="team" aria-labelledby="team-heading">
-          <h2 id="team-heading">
-            <span lang="en" class="lang-visible">Our Dedicated Team</span>
-            <span lang="hi" class="lang-hidden">हमारी समर्पित टीम</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            With over <strong>150 agents</strong>, <strong>10 supervisors</strong>, and <strong>5 support staff</strong>, LIC Neemuch ensures exceptional service under <span class="highlight">Jitendra Patidar’s</span> leadership.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            <strong>150+ एजेंट</strong>, <strong>10 सुपरवाइज़र</strong>, और <strong>5 सहायक कर्मचारी</strong> के साथ, एलआईसी नीमच <span class="highlight">जितेंद्र पाटीदार</span> के नेतृत्व में उत्कृष्ट सेवा सुनिश्चित करता है।
-          </p>
-          <div class="card-grid">
-            <div class="card">
-              <p>
-                <strong>
-                  <span lang="en" class="lang-visible">Agents:</span>
-                  <span lang="hi" class="lang-hidden">एजेंट:</span>
-                </strong>
-                <span lang="en" class="lang-visible">150+ trained professionals</span>
-                <span lang="hi" class="lang-hidden">150+ प्रशिक्षित पेशेवर</span>
-              </p>
-            </div>
-            <div class="card">
-              <p>
-                <strong>
-                  <span lang="en" class="lang-visible">Supervisors:</span>
-                  <span lang="hi" class="lang-hidden">सुपरवाइज़र:</span>
-                </strong>
-                <span lang="en" class="lang-visible">10 senior experts</span>
-                <span lang="hi" class="lang-hidden">10 वरिष्ठ विशेषज्ञ</span>
-              </p>
-            </div>
-            <div class="card">
-              <p>
-                <strong>
-                  <span lang="en" class="lang-visible">Support:</span>
-                  <span lang="hi" class="lang-hidden">समर्थन:</span>
-                </strong>
-                <span lang="en" class="lang-visible">5 dedicated staff</span>
-                <span lang="hi" class="lang-hidden">5 समर्पित कर्मचारी</span>
-              </p>
-            </div>
-          </div>
-        </section>
-      </article>
-      <article aria-labelledby="market-heading">
-        <section class="section market-section" id="market" aria-labelledby="market-heading">
-          <h2 id="market-heading">
-            <span lang="en" class="lang-visible">LIC’s Market Dominance</span>
-            <span lang="hi" class="lang-hidden">एलआईसी की बाजार प्रभुत्व</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            <strong>LIC of India</strong> leads with a <strong>61.2% premium share</strong> and <strong>₹54.52 trillion</strong> in assets (FY25). LIC Neemuch strengthens this legacy with local expertise.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            <strong>भारतीय जीवन बीमा निगम</strong> <strong>61.2% प्रीमियम हिस्सेदारी</strong> और <strong>₹54.52 लाख करोड़</strong> की संपत्ति (FY25) के साथ अग्रणी है। एलआईसी नीमच स्थानीय विशेषज्ञता के साथ इस विरासत को मजबूत करता है।
-          </p>
-          <table class="data-table table-responsive">
-            <caption>
-              <span lang="en" class="lang-visible">LIC Market Statistics (FY25)</span>
-              <span lang="hi" class="lang-hidden">एलआईसी बाजार आंकड़े (FY25)</span>
-            </caption>
-            <thead>
-              <tr>
-                <th>
-                  <span lang="en" class="lang-visible">Metric</span>
-                  <span lang="hi" class="lang-hidden">मेट्रिक</span>
-                </th>
-                <th>
-                  <span lang="en" class="lang-visible">Value</span>
-                  <span lang="hi" class="lang-hidden">मूल्य</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Premium Share</span>
-                  <span lang="hi" class="lang-hidden">प्रीमियम हिस्सेदारी</span>
-                </td>
-                <td>61.2%</td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Assets</span>
-                  <span lang="hi" class="lang-hidden">संपत्ति</span>
-                </td>
-                <td>₹54.52 trillion</td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Agents</span>
-                  <span lang="hi" class="lang-hidden">एजेंट</span>
-                </td>
-                <td>13.8 lakh</td>
-              </tr>
-              <tr>
-                <td>
-                  <span lang="en" class="lang-visible">Branches</span>
-                  <span lang="hi" class="lang-hidden">शाखाएं</span>
-                </td>
-                <td>2,048</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-      </article>
-      <article aria-labelledby="social-heading">
-        <section class="section social-section" id="social" aria-labelledby="social-heading">
-          <h2 id="social-heading">
-            <span lang="en" class="lang-visible">Community Engagement</span>
-            <span lang="hi" class="lang-hidden">सामुदायिक सहभागिता</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            LIC Neemuch champions <strong>education, healthcare, and financial inclusion</strong> in rural areas like <span class="highlight">Sarwaniya Maharaj</span> near <span class="highlight">Gandhi Sagar Dam</span>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            एलआईसी नीमच <span class="highlight">गांधी सागर बांध</span> के पास <span class="highlight">सरवानिया महाराज</span> जैसे ग्रामीण क्षेत्रों में <strong>शिक्षा, स्वास्थ्य, और वित्तीय समावेशन</strong> को बढ़ावा देता है।
-          </p>
-          <ul class="benefits-list">
-            <li>
-              <strong>
-                <span lang="en" class="lang-visible">75+ Insurance Literacy Camps</span>
-                <span lang="hi" class="lang-hidden">75+ बीमा साक्षरता शिविर</span>
-              </strong>
-              <span lang="en" class="lang-visible">in 2023 for rural communities.</span>
-              <span lang="hi" class="lang-hidden">2023 में ग्रामीण समुदायों के लिए।</span>
-            </li>
-            <li>
-              <strong>
-                <span lang="en" class="lang-visible">10,000+ Enrollments</span>
-                <span lang="hi" class="lang-hidden">10,000+ नामांकन</span>
-              </strong>
-              <span lang="en" class="lang-visible">in PMJBY and PMSBY.</span>
-              <span lang="hi" class="lang-hidden">पीएमजेबीवाय और पीएमएसबीवाय में।</span>
-            </li>
-            <li>
-              <strong>
-                <span lang="en" class="lang-visible">₹5 Lakh Donated</span>
-                <span lang="hi" class="lang-hidden">₹5 लाख दान</span>
-              </strong>
-              <span lang="en" class="lang-visible">to healthcare initiatives in 2022.</span>
-              <span lang="hi" class="lang-hidden">2022 में स्वास्थ्य पहलों के लिए।</span>
-            </li>
-          </ul>
-        </section>
-      </article>
-      <article aria-labelledby="testimonials-heading">
-        <section class="section testimonials-section" id="testimonials" aria-labelledby="testimonials-heading">
-          <h2 id="testimonials-heading">
-            <span lang="en" class="lang-visible">Client Testimonials</span>
-            <span lang="hi" class="lang-hidden">ग्राहक प्रशंसापत्र</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            Discover why residents trust LIC Neemuch. Share your experience at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            जानें क्यों निवासी एलआईसी नीमच पर भरोसा करते हैं। अपने अनुभव को <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर साझा करें।
-          </p>
-          ${
-            reviews.length > 0
-              ? `
-          <div class="testimonials-carousel" aria-label="Client testimonials carousel">
-            ${reviews
-              .map(
-                (review, index) => `
-                <div class="testimonial-card" data-index="${index}" ${
-                  index === 0 ? 'style="display: block;"' : 'style="display: none;"'
-                }>
-                  <div class="review-stars" aria-hidden="true">${renderStars(review.rating)}</div>
-                  <blockquote class="review-body">${review.quote}</blockquote>
-                  <cite class="review-author">
-                    <span>${review.author}</span>
-                  </cite>
-                  <span class="review-date">${new Date(review.datePublished).toLocaleDateString()}</span>
-                  <span class="review-language" lang="${review.language}">
-                    ${review.language === 'hi-IN' ? 'हिन्दी' : 'English'}
-                  </span>
-                </div>
-              `
-              )
-              .join('')}
-          </div>
-          <a href="/reviews" class="cta-button secondary">
-            <span lang="en" class="lang-visible">View All Testimonials</span>
-            <span lang="hi" class="lang-hidden">सभी प्रशंसापत्र देखें</span>
-          </a>
-          `
-              : `
-          <p lang="en" class="lang-visible">No testimonials yet. Be the first to share your experience!</p>
-          <p lang="hi" class="lang-hidden">अभी तक कोई समीक्षा नहीं। अपनी अनुभव साझा करने वाले पहले व्यक्ति बनें!</p>
-          `
-          }
-        </section>
-      </article>
-      <article aria-labelledby="calculator-heading">
-        <section class="section calculator-section" id="calculator" aria-labelledby="calculator-heading">
-          <h2 id="calculator-heading">
-            <span lang="en" class="lang-visible">Calculate Your Premium</span>
-            <span lang="hi" class="lang-hidden">अपना प्रीमियम गणना करें</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            Use our <strong>premium calculator</strong> to estimate insurance costs. For accurate quotes, contact us at <a href="tel:+917987235207" class="content-link">+91 7987235207</a> or visit <span class="highlight">Vikas Nagar</span>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            हमारा <strong>प्रीमियम कैलकुलेटर</strong> बीमा लागत का अनुमान लगाने के लिए उपयोग करें। सटीक उद्धरणों के लिए, <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें या <span class="highlight">विकास नगर</span> पर आएं।
-          </p>
-          <div class="calculator-form">
-            <label for="age">
-              <span lang="en" class="lang-visible">Age:</span>
-              <span lang="hi" class="lang-hidden">आयु:</span>
-            </label>
-            <input type="number" id="age" min="18" max="80" placeholder="Enter age" required>
-            <label for="plan-type">
-              <span lang="en" class="lang-visible">Plan Type:</span>
-              <span lang="hi" class="lang-hidden">योजना प्रकार:</span>
-            </label>
-            <select id="plan-type" required>
-              <option value="term">
-                <span lang="en" class="lang-visible">Term Insurance</span>
-                <span lang="hi" class="lang-hidden">टर्म बीमा</span>
-              </option>
-              <option value="pension">
-                <span lang="en" class="lang-visible">Pension Plan</span>
-                <span lang="hi" class="lang-hidden">पेंशन योजना</span>
-              </option>
-              <option value="child">
-                <span lang="en" class="lang-visible">Child Plan</span>
-                <span lang="hi" class="lang-hidden">चाइल्ड प्लान</span>
-              </option>
-              <option value="ulips">
-                <span lang="en" class="lang-visible">ULIP</span>
-                <span lang="hi" class="lang-hidden">यूलिप</span>
-              </option>
-              <option value="micro">
-                <span lang="en" class="lang-visible">Micro-Insurance</span>
-                <span lang="hi" class="lang-hidden">सूक्ष्म बीमा</span>
-              </option>
-            </select>
-            <label for="sum-assured">
-              <span lang="en" class="lang-visible">Sum Assured (₹):</span>
-              <span lang="hi" class="lang-hidden">बीमित राशि (₹):</span>
-            </label>
-            <input type="number" id="sum-assured" min="100000" placeholder="Enter sum assured" required>
-            <button type="button" class="cta-button" onclick="calculatePremium()">
-              <span lang="en" class="lang-visible">Calculate</span>
-              <span lang="hi" class="lang-hidden">गणना करें</span>
-            </button>
-            <p id="calc-result" aria-live="polite"></p>
-          </div>
-        </section>
-      </article>
-      <article aria-labelledby="resources-heading">
-        <section class="section resources-section" id="resources" aria-labelledby="resources-heading">
-          <h2 id="resources-heading">
-            <span lang="en" class="lang-visible">LIC Resources</span>
-            <span lang="hi" class="lang-hidden">एलआईसी संसाधन</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            Access LIC’s online services through LIC Neemuch to pay premiums or check policy status. For assistance, call <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            एलआईसी नीमच के माध्यम से एलआईसी की ऑनलाइन सेवाओं तक पहुंचें, प्रीमियम भुगतान करें या पॉलिसी स्थिति जांचें। सहायता के लिए, <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर कॉल करें।
-          </p>
-          <ul class="benefits-list">
-            <li>
-              <a href="https://licindia.in/Online-Payment" target="_blank" rel="noopener noreferrer" class="content-link">
-                <span lang="en" class="lang-visible">Pay Premium Online</span>
-                <span lang="hi" class="lang-hidden">प्रीमियम ऑनलाइन भुगतान करें</span>
-              </a>
-            </li>
-            <li>
-              <a href="https://licindia.in/Customer-Services" target="_blank" rel="noopener noreferrer" class="content-link">
-                <span lang="en" class="lang-visible">Check Policy Status</span>
-                <span lang="hi" class="lang-hidden">पॉलिसी स्थिति जांचें</span>
-              </a>
-            </li>
-            <li>
-              <a href="/services" class="content-link">
-                <span lang="en" class="lang-visible">Explore Local Plans</span>
-                <span lang="hi" class="lang-hidden">स्थानीय योजनाएं देखें</span>
-              </a>
-            </li>
-            <li>
-              <span lang="en" class="lang-visible">Contact our branch at </span>
-              <span lang="hi" class="lang-hidden">हमारी शाखा से संपर्क करें </span>
-              <a href="tel:+917987235207" class="content-link">+91 7987235207</a>
-            </li>
-          </ul>
-          <a href="/faqs" class="cta-button secondary">
-            <span lang="en" class="lang-visible">More Resources</span>
-            <span lang="hi" class="lang-hidden">और संसाधन</span>
-          </a>
-        </section>
-      </article>
-      <article aria-labelledby="contact-heading">
-        <section class="section contact-section" id="contact" aria-labelledby="contact-heading">
-          <h2 id="contact-heading">
-            <span lang="en" class="lang-visible">Get in Touch</span>
-            <span lang="hi" class="lang-hidden">संपर्क करें</span>
-          </h2>
-          <p lang="en" class="lang-visible">
-            Connect with LIC Neemuch for personalized insurance solutions. Our team is available via phone, WhatsApp, email, or at <span class="highlight">Vikas Nagar, Neemuch</span>. Search <span class="highlight">LIC Neemuch near me</span> to locate us.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            एलआईसी नीमच से विशेष बीमा समाधानों के लिए संपर्क करें। हमारी टीम फोन, व्हाट्सएप, ईमेल, या <span class="highlight">विकास नगर, नीमच</span> पर उपलब्ध है। हमें ढूंढने के लिए <span class="highlight">एलआईसी नीमच मेरे पास</span> खोजें।
-          </p>
-          <div class="contact-info" itemscope itemtype="https://schema.org/ContactPoint">
-            <div class="contact-details">
-              <p>
-                📍 <strong>
-                  <span lang="en" class="lang-visible">Address:</span>
-                  <span lang="hi" class="lang-hidden">पता:</span>
-                </strong>
-                <span itemprop="address">
-                  <span lang="en" class="lang-visible">Vikas Nagar, Neemuch, MP 458441</span>
-                  <span lang="hi" class="lang-hidden">विकास नगर, नीमच, एमपी 458441</span>
-                </span>
-              </p>
-              <p>
-                📞 <strong>
-                  <span lang="en" class="lang-visible">Phone:</span>
-                  <span lang="hi" class="lang-hidden">फोन:</span>
-                </strong>
-                <a href="tel:+917987235207" class="content-link" aria-label="Call LIC Neemuch" itemprop="telephone">+91 7987235207</a>
-              </p>
-              <p>
-                📧 <strong>
-                  <span lang="en" class="lang-visible">Email:</span>
-                  <span lang="hi" class="lang-hidden">ईमेल:</span>
-                </strong>
-                <a href="mailto:licneemuch343@licindia.com" class="content-link" aria-label="Email LIC Neemuch" itemprop="email">licneemuch343@licindia.com</a>
-              </p>
-              <p>
-                📱 <strong>
-                  <span lang="en" class="lang-visible">WhatsApp:</span>
-                  <span lang="hi" class="lang-hidden">व्हाट्सएप:</span>
-                </strong>
-                <a href="https://wa.me/917987235207" class="content-link" target="_blank" rel="noopener noreferrer" aria-label="Chat with LIC Neemuch">+91 7987235207</a>
-              </p>
-              <p>
-                🏢 <strong>
-                  <span lang="en" class="lang-visible">Branch Code:</span>
-                  <span lang="hi" class="lang-hidden">शाखा कोड:</span>
-                </strong>
-                343
-              </p>
-              <p>
-                ⏰ <strong>
-                  <span lang="en" class="lang-visible">Office Hours:</span>
-                  <span lang="hi" class="lang-hidden">कार्यालय समय:</span>
-                </strong>
-                <span lang="en" class="lang-visible">Monday to Saturday, 10 AM to 5 PM</span>
-                <span lang="hi" class="lang-hidden">सोमवार से शनिवार, सुबह 10 बजे से शाम 5 बजे</span>
-              </p>
-            </div>
-            <div class="contact-map">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3622.392!2d74.8742!3d24.4716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3967e7d6c8c0f0c1%3A0x9f0b0f0c0c0c0c0c!2sLIC%20Neemuch%20Branch!5e0!3m2!1sen!2sin!4v1698765432100"
-                width="100%"
-                height="300"
-                style="border:0; border-radius: 10px;"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                aria-label="Map of LIC Neemuch Branch, Vikas Nagar"
-              ></iframe>
-            </div>
-          </div>
-          <p lang="en" class="lang-visible">
-            For urgent assistance, reach LIC’s <strong>24x7 toll-free support</strong> at <a href="tel:+911125750500" class="content-link">+91 1125750500</a>. For local support, visit us near <span class="highlight">Neemuch Railway Station</span>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            तत्काल सहायता के लिए, एलआईसी के <strong>24x7 टोल-फ्री समर्थन</strong> <a href="tel:+911125750500" class="content-link">+91 1125750500</a> पर संपर्क करें। स्थानीय सहायता के लिए, <span class="highlight">नीमच रेलवे स्टेशन</span> के पास हमसे मिलें।
-          </p>
-          <p lang="en" class="lang-visible">
-            For advanced queries, contact the <strong>LIC Indore Divisional Office</strong> at <a href="tel:+917312523511" class="content-link">+91 731 252 3511</a> or <a href="mailto:bo_31c@licindia.com" class="content-link">bo_31c@licindia.com</a>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            उन्नत प्रश्नों के लिए, <strong>एलआईसी इंदौर डिवीजनल कार्यालय</strong> से <a href="tel:+917312523511" class="content-link">+91 731 252 3511</a> या <a href="mailto:bo_31c@licindia.com" class="content-link">bo_31c@licindia.com</a> पर संपर्क करें।
-          </p>
-          <p lang="en" class="lang-visible">
-            Find us by searching <span class="highlight">LIC Neemuch near me</span>. Our branch is near <span class="highlight">Kileshwar Temple</span>, accessible by auto-rickshaw or taxi.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            <span class="highlight">एलआईसी नीमच मेरे पास</span> खोजकर हमें ढूंढें। हमारी शाखा <span class="highlight">किलेश्वर मंदिर</span> के पास है, ऑटो-रिक्शा या टैक्सी से पहुंचें।
-          </p>
-          <p lang="en" class="lang-visible">
-            Book a <strong>free consultation</strong> to explore insurance options at <a href="tel:+917987235207" class="content-link">+91 7987235207</a> or <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            बीमा विकल्पों का पता लगाने के लिए <strong>मुफ्त परामर्श</strong> बुक करें: <a href="tel:+917987235207" class="content-link">+91 7987235207</a> या <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a>।
-          </p>
-          <div class="social-share" aria-label="Share LIC Neemuch Page">
-            <a href="https://x.com/intent/post?url=${encodeURIComponent(pageUrl)}&text=${metaTitle}" target="_blank" rel="noopener noreferrer">
-              <span lang="en" class="lang-visible">Post on X</span>
-              <span lang="hi" class="lang-hidden">एक्स पर पोस्ट करें</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.4.36a9.1 9.1 0 0 1-2.89 1.1A4.52 4.52 0 0 0 16.5 0c-2.53 0-4.5 2.17-4.5 4.84 0 .38.04.75.12 1.1A12.9 12.9 0 0 1 3 1.67a5.06 5.06 0 0 0-.61 2.44c0 1.69.84 3.18 2.13 4.06a4.47 4.47 0 0 1-2.05-.6v.06c0 2.36 1.64 4.33 3.82 4.78a4.4 4.4 0 0 1-2.04.08 4.49 4.49 0 0 0 4.2 3.13A9.05 9.05 0 0 1 1 20.08 12.73 12.73 0 0 0 8 22c7.55 0 11.68-6.49 11.68-12.11 0-.19 0-.39-.01-.58A8.3 8.3 0 0 0 23 3z"/>
-              </svg>
-            </a>
-                      <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}" target="_blank" rel="noopener noreferrer">
-                <span lang="en" class="lang-visible">Share on Facebook</span>
-                <span lang="hi" class="lang-hidden">फेसबुक पर साझा करें</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99h-2.54v-2.89h2.54V9.41c0-2.5 1.5-3.89 3.8-3.89 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.89h-2.33v6.99C18.34 21.13 22 16.99 22 12z"/>
-                </svg>
-              </a>
-              <a href="https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(pageUrl)}" target="_blank" rel="noopener noreferrer">
-                <span lang="en" class="lang-visible">Share on LinkedIn</span>
-                <span lang="hi" class="lang-hidden">लिंक्डइन पर साझा करें</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.91 1.65-1.87 3.39-1.87 3.62 0 4.29 2.38 4.29 5.48v6.28zM5.34 7.43c-1.14 0-2.06-.92-2.06-2.06s.92-2.06 2.06-2.06 2.06.92 2.06 2.06-.92 2.06-2.06 2.06zM6.91 20.45H3.77V9h3.14v11.45zM22 0H2C.9 0 0 .9 0 2v20c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V2c0-1.1-.9-2-2-2z"/>
-                </svg>
-              </a>
-            </div>
-          </section>
-        </article>
-        <article aria-labelledby="faq-heading">
-          <section class="section faq-section" id="faq" aria-labelledby="faq-heading">
-            <h2 id="faq-heading">
-              <span lang="en" class="lang-visible">Frequently Asked Questions</span>
-              <span lang="hi" class="lang-hidden">अक्सर पूछे जाने वाले प्रश्न</span>
-            </h2>
-            <p lang="en" class="lang-visible">
-              Find answers to common queries about LIC policies and services. For more details, contact us at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
-            </p>
-            <p lang="hi" class="lang-hidden">
-              एलआईसी पॉलिसियों और सेवाओं के बारे में सामान्य प्रश्नों के उत्तर खोजें। अधिक जानकारी के लिए, <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें।
-            </p>
-            <div class="faq-list">
-              <details class="faq-item">
-                <summary>
-                  <span lang="en" class="lang-visible">What types of insurance plans does LIC Neemuch offer?</span>
-                  <span lang="hi" class="lang-hidden">एलआईसी नीमच कौन से बीमा योजनाएं प्रदान करता है?</span>
-                </summary>
-                <p lang="en" class="lang-visible">
-                  We offer term insurance, pension plans, child plans, ULIPs, and micro-insurance tailored for residents of <span class="highlight">Neemuch, Manasa, and Mandsaur</span>.
-                </p>
-                <p lang="hi" class="lang-hidden">
-                  हम <span class="highlight">नीमच, मनासा और मंदसौर</span> के निवासियों के लिए टर्म बीमा, पेंशन योजनाएं, चाइल्ड प्लान, यूलिप और सूक्ष्म बीमा प्रदान करते हैं।
-                </p>
-              </details>
-              <details class="faq-item">
-                <summary>
-                  <span lang="en" class="lang-visible">How can I contact LIC Neemuch?</span>
-                  <span lang="hi" class="lang-hidden">मैं एलआईसी नीमच से कैसे संपर्क कर सकता हूँ?</span>
-                </summary>
-                <p lang="en" class="lang-visible">
-                  Reach us at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>, <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a>, or visit <span class="highlight">Vikas Nagar, Neemuch</span>.
-                </p>
-                <p lang="hi" class="lang-hidden">
-                  हमसे <a href="tel:+917987235207" class="content-link">+91 7987235207</a>, <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a> पर संपर्क करें या <span class="highlight">विकास नगर, नीमच</span> पर आएं।
-                </p>
-              </details>
-              <details class="faq-item">
-                <summary>
-                  <span lang="en" class="lang-visible">What is the claim settlement ratio of LIC?</span>
-                  <span lang="hi" class="lang-hidden">एलआईसी का दावा निपटान अनुपात क्या है?</span>
-                </summary>
-                <p lang="en" class="lang-visible">
-                  LIC has a claim settlement ratio of <strong>98.62%</strong> (FY 2020-21), ensuring reliable payouts for policyholders.
-                </p>
-                <p lang="hi" class="lang-hidden">
-                  एलआईसी का दावा निपटान अनुपात <strong>98.62%</strong> (वित्त वर्ष 2020-21) है, जो पॉलिसीधारकों के लिए विश्वसनीय भुगतान सुनिश्चित करता है।
-                </p>
-              </details>
-              <details class="faq-item">
-                <summary>
-                  <span lang="en" class="lang-visible">Can I pay my premium online?</span>
-                  <span lang="hi" class="lang-hidden">क्या मैं अपना प्रीमियम ऑनलाइन भुगतान कर सकता हूँ?</span>
-                </summary>
-                <p lang="en" class="lang-visible">
-                  Yes, pay premiums online at <a href="https://licindia.in/Online-Payment" target="_blank" rel="noopener noreferrer" class="content-link">licindia.in/Online-Payment</a> or contact us for assistance.
-                </p>
-                <p lang="hi" class="lang-hidden">
-                  हां, प्रीमियम ऑनलाइन <a href="https://licindia.in/Online-Payment" target="_blank" rel="noopener noreferrer" class="content-link">licindia.in/Online-Payment</a> पर भुगतान करें या सहायता के लिए हमसे संपर्क करें।
-                </p>
-              </details>
-              <details class="faq-item">
-                <summary>
-                  <span lang="en" class="lang-visible">How can I join as an LIC agent?</span>
-                  <span lang="hi" class="lang-hidden">मैं एलआईसी एजेंट के रूप में कैसे शामिल हो सकता हूँ?</span>
-                </summary>
-                <p lang="en" class="lang-visible">
-                  Contact <span class="highlight">Jitendra Patidar</span> at <a href="tel:+917987235207" class="content-link">+91 7987235207</a> to learn about agent opportunities and training.
-                </p>
-                <p lang="hi" class="lang-hidden">
-                  एजेंट अवसरों और प्रशिक्षण के बारे में जानने के लिए <span class="highlight">जितेंद्र पाटीदार</span> से <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें।
-                </p>
-              </details>
-            </div>
-            <a href="/faqs" class="cta-button secondary">
-              <span lang="en" class="lang-visible">View All FAQs</span>
-              <span lang="hi" class="lang-hidden">सभी प्रश्न देखें</span>
-            </a>
-          </section>
-        </article>
-      </main>
-      <footer class="footer" role="contentinfo" itemscope itemtype="https://schema.org/WPFooter">
-        <div class="footer-content">
-          <div class="footer-brand">
-            <a href="/" class="footer-logo" aria-label="LIC Neemuch Homepage" itemprop="url">
-              <img src="${logoImage}" alt="LIC Neemuch Branch Logo" class="logo-img" width="44" height="44" loading="lazy" itemprop="logo">
-              <span lang="en" class="lang-visible" itemprop="name">LIC Neemuch</span>
-              <span lang="hi" class="lang-hidden" itemprop="name">एलआईसी नीमच</span>
-            </a>
-            <p lang="en" class="lang-visible">
-              Trusted by over <strong>50,000 policyholders</strong> in <span class="highlight">Neemuch, Manasa, and Mandsaur</span>. Visit us at <span class="highlight">Vikas Nagar, Neemuch, MP 458441</span>.
-            </p>
-            <p lang="hi" class="lang-hidden">
-              <span class="highlight">नीमच, मनासा और मंदसौर</span> में <strong>50,000+ पॉलिसीधारकों</strong> द्वारा विश्वसनीय। <span class="highlight">विकास नगर, नीमच, एमपी 458441</span> पर आएं।
-            </p>
-          </div>
-          <div class="footer-links">
-            <h3>
-              <span lang="en" class="lang-visible">Quick Links</span>
-              <span lang="hi" class="lang-hidden">त्वरित लिंक</span>
-            </h3>
-            <ul>
-              <li>
-                <a href="/about">
-                  <span lang="en" class="lang-visible">About Us</span>
-                  <span lang="hi" class="lang-hidden">हमारे बारे में</span>
-                </a>
-              </li>
-              <li>
-                <a href="/services">
-                  <span lang="en" class="lang-visible">Services</span>
-                  <span lang="hi" class="lang-hidden">सेवाएँ</span>
-                </a>
-              </li>
-              <li>
-                <a href="/faqs">
-                  <span lang="en" class="lang-visible">FAQs</span>
-                  <span lang="hi" class="lang-hidden">प्रश्न</span>
-                </a>
-              </li>
-              <li>
-                <a href="/join">
-                  <span lang="en" class="lang-visible">Join as Agent</span>
-                  <span lang="hi" class="lang-hidden">एजेंट के रूप में शामिल हों</span>
-                </a>
-              </li>
-              <li>
-                <a href="/contact">
-                  <span lang="en" class="lang-visible">Contact</span>
-                  <span lang="hi" class="lang-hidden">संपर्क</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="footer-contact">
-            <h3>
-              <span lang="en" class="lang-visible">Contact Us</span>
-              <span lang="hi" class="lang-hidden">हमसे संपर्क करें</span>
-            </h3>
-            <p>
-              📍 <span lang="en" class="lang-visible">Vikas Nagar, Neemuch, MP 458441</span>
-              <span lang="hi" class="lang-hidden">विकास नगर, नीमच, एमपी 458441</span>
-            </p>
-            <p>
-              📞 <a href="tel:+917987235207" class="content-link">+91 7987235207</a>
-            </p>
-            <p>
-              📧 <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a>
-            </p>
-            <p>
-              📱 <a href="https://wa.me/917987235207" class="content-link" target="_blank" rel="noopener noreferrer">
-                <span lang="en" class="lang-visible">WhatsApp</span>
-                <span lang="hi" class="lang-hidden">व्हाट्सएप</span>
-              </a>
-            </p>
-          </div>
-          <div class="footer-social">
-            <h3>
-              <span lang="en" class="lang-visible">Follow Us</span>
-              <span lang="hi" class="lang-hidden">हमें फॉलो करें</span>
-            </h3>
-            <a href="https://x.com/licneemuch" target="_blank" rel="noopener noreferrer">
-              <span lang="en" class="lang-visible">X</span>
-              <span lang="hi" class="lang-hidden">एक्स</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.4.36a9.1 9.1 0 0 1-2.89 1.1A4.52 4.52 0 0 0 16.5 0c-2.53 0-4.5 2.17-4.5 4.84 0 .38.04.75.12 1.1A12.9 12.9 0 0 1 3 1.67a5.06 5.06 0 0 0-.61 2.44c0 1.69.84 3.18 2.13 4.06a4.47 4.47 0 0 1-2.05-.6v.06c0 2.36 1.64 4.33 3.82 4.78a4.4 4.4 0 0 1-2.04.08 4.49 4.49 0 0 0 4.2 3.13A9.05 9.05 0 0 1 1 20.08 12.73 12.73 0 0 0 8 22c7.55 0 11.68-6.49 11.68-12.11 0-.19 0-.39-.01-.58A8.3 8.3 0 0 0 23 3z"/>
-              </svg>
-            </a>
-            <a href="https://www.facebook.com/licneemuch" target="_blank" rel="noopener noreferrer">
-              <span lang="en" class="lang-visible">Facebook</span>
-              <span lang="hi" class="lang-hidden">फेसबुक</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99h-2.54v-2.89h2.54V9.41c0-2.5 1.5-3.89 3.8-3.89 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.89h-2.33v6.99C18.34 21.13 22 16.99 22 12z"/>
-              </svg>
-            </a>
-            <a href="https://www.linkedin.com/company/licneemuch" target="_blank" rel="noopener noreferrer">
-              <span lang="en" class="lang-visible">LinkedIn</span>
-              <span lang="hi" class="lang-hidden">लिंक्डइन</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.91 1.65-1.87 3.39-1.87 3.62 0 4.29 2.38 4.29 5.48v6.28zM5.34 7.43c-1.14 0-2.06-.92-2.06-2.06s.92-2.06 2.06-2.06 2.06.92 2.06 2.06-.92 2.06-2.06 2.06zM6.91 20.45H3.77V9h3.14v11.45zM22 0H2C.9 0 0 .9 0 2v20c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V2c0-1.1-.9-2-2-2z"/>
-              </svg>
-            </a>
+          <div class="card">
+            <h3>Exceptional Support</h3>
+            <p lang="en">Contact our customer care at <a href="tel:+917987235207" class="content-link">+91 7987235207</a> or LIC’s <strong>24x7 toll-free line</strong> at <a href="tel:+911125750500" class="content-link">+91 1125750500</a>.</p>
+            <p lang="hi">हमारी ग्राहक सेवा से <a href="tel:+917987235207" class="content-link">+91 7987235207</a> या एलआईसी की <strong>24x7 टोल-फ्री लाइन</strong> <a href="tel:+911125750500" class="content-link">+91 1125750500</a> पर संपर्क करें।</p>
           </div>
         </div>
-        <div class="footer-bottom">
-          <p lang="en" class="lang-visible">
-            &copy; ${new Date().getFullYear()} LIC Neemuch. All rights reserved. Powered by <a href="https://licindia.in" target="_blank" rel="noopener noreferrer" class="content-link">Life Insurance Corporation of India</a>.
-          </p>
-          <p lang="hi" class="lang-hidden">
-            &copy; ${new Date().getFullYear()} एलआईसी नीमच। सभी अधिकार सुरक्षित। <a href="https://licindia.in" target="_blank" rel="noopener noreferrer" class="content-link">भारतीय जीवन बीमा निगम</a> द्वारा संचालित।
-          </p>
-          <p lang="en" class="lang-visible">
-            <a href="/privacy" class="content-link">Privacy Policy</a> | <a href="/terms" class="content-link">Terms of Service</a> | <a href="/sitemap" class="content-link">Sitemap</a>
-          </p>
-          <p lang="hi" class="lang-hidden">
-            <a href="/privacy" class="content-link">गोपनीयता नीति</a> | <a href="/terms" class="content-link">सेवा की शर्तें</a> | <a href="/sitemap" class="content-link">साइटमैप</a>
-          </p>
+        <a href="/about" class="cta-button secondary" aria-label="Learn More About LIC Neemuch">About Us</a>
+      </section>
+    </article>
+    <article aria-labelledby="about-heading">
+      <section class="section about-section" id="about" aria-labelledby="about-heading">
+        <h2 id="about-heading">About LIC Neemuch – A Legacy of Trust</h2>
+        <p lang="en">
+          Part of <strong>Life Insurance Corporation of India</strong> (est. 1956), LIC Neemuch is a pillar of financial stability in <span class="highlight">Madhya Pradesh</span>. With assets worth <strong>₹54.52 trillion</strong> (FY25), our branch (code 343) at <span class="highlight">Vikas Nagar, Neemuch, MP 458441</span> serves over <strong>50,000 policyholders</strong>. Reach us at <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a> or <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
+        </p>
+        <p lang="hi">
+          <strong>भारतीय जीवन बीमा निगम</strong> (स्थापना 1956) का हिस्सा, एलआईसी नीमच <span class="highlight">मध्य प्रदेश</span> में वित्तीय स्थिरता का एक स्तंभ है। <strong>₹54.52 लाख करोड़</strong> (FY25) की संपत्ति के साथ, हमारी शाखा (कोड 343) <span class="highlight">विकास नगर, नीमच, एमपी 458441</span> में <strong>50,000+ पॉलिसीधारकों</strong> की सेवा करती है। <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a> या <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें।
+        </p>
+        <p lang="en">For decades, we’ve fostered trust through insurance camps during <span class="highlight">Navratri</span> and <span class="highlight">Diwali</span>, extending outreach to rural areas like <span class="highlight">Sarwaniya Maharaj</span> and <span class="highlight">Ratangarh</span> near <span class="highlight">Kileshwar Temple</span>.</p>
+        <p lang="hi">दशकों से, हमने <span class="highlight">नवरात्रि</span> और <span class="highlight">दिवाली</span> के दौरान बीमा शिविरों के माध्यम से विश्वास को बढ़ावा दिया है, जो <span class="highlight">किलेश्वर मंदिर</span> के पास <span class="highlight">सरवानिया महाराज</span> और <span class="highlight">रतनगढ़</span> जैसे ग्रामीण क्षेत्रों तक फैली है।</p>
+        <table class="data-table table-responsive">
+          <caption>LIC Neemuch Branch Overview</caption>
+          <thead>
+            <tr>
+              <th>Detail</th>
+              <th>Information</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Branch Code</td>
+              <td>343</td>
+            </tr>
+            <tr>
+              <td>Address</td>
+              <td>Vikas Nagar, Neemuch (Madhya Pradesh) 458441</td>
+            </tr>
+            <tr>
+              <td>Phone</td>
+              <td>+91 7987235207</td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td>licneemuch343@licindia.com</td>
+            </tr>
+            <tr>
+              <td>Divisional Office</td>
+              <td>Indore, +91 731 252 3511, bo_31c@licindia.com</td>
+            </tr>
+          </tbody>
+        </table>
+        <a href="/faqs" class="cta-button secondary" aria-label="Find Answers in Our FAQs">Find Answers</a>
+      </section>
+    </article>
+    <article aria-labelledby="jitendra-heading">
+      <section class="section jitendra-section" id="jitendra" aria-labelledby="jitendra-heading">
+        <h2 id="jitendra-heading">Meet Jitendra Patidar – Expert Advisor</h2>
+        <p lang="en">
+          <span class="highlight">Jitendra Patidar</span>, Development Officer at LIC Neemuch, offers over <strong>10 years of experience</strong> in insurance planning. A <strong>Chairman’s Club member</strong> (2020), he specializes in <strong>term insurance, pension plans, and child plans</strong>. Schedule a consultation at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
+        </p>
+        <p lang="hi">
+          <span class="highlight">जितेंद्र पाटीदार</span>, एलआईसी नीमच के डेवलपमेंट ऑफिसर, बीमा योजना में <strong>10 वर्षों से अधिक का अनुभव</strong> प्रदान करते हैं। <strong>चेयरमैन क्लब सदस्य</strong> (2020) के रूप में, वे <strong>टर्म बीमा, पेंशन योजनाएं, और चाइल्ड प्लान</strong> में विशेषज्ञ हैं। <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर परामर्श बुक करें।
+        </p>
+        <div class="card-grid">
+          <div class="card">
+            <p><strong>Notable Achievements:</strong> Top Development Officer Award (2022), Rural Outreach Excellence (2023).</p>
+          </div>
+          <div class="card">
+            <p><strong>Specialized Expertise:</strong> Term Plans (New Jeevan Amar), Pension Plans (Jeevan Shanti).</p>
+          </div>
         </div>
-      </footer>
+        <div class="timeline">
+          <p><strong>Career Milestones:</strong></p>
+          <ol>
+            <li><span>2015:</span> Joined LIC as Development Officer</li>
+            <li><span>2020:</span> Earned Chairman’s Club Membership</li>
+            <li><span>2023:</span> Led 50+ rural insurance campaigns</li>
+          </ol>
+        </div>
+        <a href="/about#jitendra" class="cta-button secondary" aria-label="Learn More About Jitendra">More About Jitendra</a>
+      </section>
+    </article>
+    <article aria-labelledby="services-heading">
+      <section class="section services-section" id="services" aria-labelledby="services-heading">
+        <h2 id="services-heading">Comprehensive Insurance Plans</h2>
+        <p lang="en">
+          LIC Neemuch branch offers a range of <strong>insurance plans</strong> for residents of <span class="highlight">Neemuch Chawni, Manasa, and Mandsaur</span>. From <strong>term insurance</strong> to <strong>ULIPs</strong>, our plans meet diverse financial goals. Contact us at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
+        </p>
+        <p lang="hi">
+          एलआईसी नीमच शाखा <span class="highlight">नीमच चावनी, मनासा और मंदसौर</span> के निवासियों के लिए <strong>बीमा योजनाओं</strong> की श्रृंखला प्रदान करती है। <strong>टर्म बीमा</strong> से लेकर <strong>यूलिप</strong> तक, हमारी योजनाएं विभिन्न वित्तीय लक्ष्यों को पूरा करती हैं। <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें।
+        </p>
+        <table class="data-table table-responsive">
+          <caption>Popular LIC Plans at Neemuch Branch</caption>
+          <thead>
+            <tr>
+              <th>Plan Type</th>
+              <th>Key Plans</th>
+              <th>Benefits</th>
+              <th>Premium Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Term Insurance</td>
+              <td>New Jeevan Amar, Saral Jeevan</td>
+              <td>High coverage, affordable premiums</td>
+              <td>₹5,000–₹50,000</td>
+            </tr>
+            <tr>
+              <td>Pension Plans</td>
+              <td>Jeevan Shanti, Saral Pension</td>
+              <td>Guaranteed lifelong income</td>
+              <td>₹20,000–₹2 lakh</td>
+            </tr>
+            <tr>
+              <td>Child Plans</td>
+              <td>Jeevan Tarun, Money Back</td>
+              <td>Funds for education and future</td>
+              <td>₹15,000–₹1 lakh</td>
+            </tr>
+            <tr>
+              <td>ULIPs</td>
+              <td>SIIP, Pension Plus</td>
+              <td>Market-linked returns</td>
+              <td>₹25,000–₹5 lakh</td>
+            </tr>
+            <tr>
+              <td>Micro-Insurance</td>
+              <td>Jeevan Dhara</td>
+              <td>Low-cost coverage for all</td>
+              <td>₹1,000–₹10,000</td>
+            </tr>
+          </tbody>
+        </table>
+        <a href="/services" class="cta-button secondary" aria-label="Explore All LIC Plans">Explore All Plans</a>
+      </section>
+    </article>
+    <article aria-labelledby="architecture-heading">
+      <section class="section architecture-section" id="architecture" aria-labelledby="architecture-heading">
+        <h2 id="architecture-heading">Our Service Model</h2>
+        <p lang="en">
+          LIC Neemuch delivers seamless insurance services through a <strong>client-centric approach</strong>, using <strong>digital tools</strong>, a robust agent network, and rural outreach programs across <span class="highlight">Neemuch and Mandsaur</span>.
+        </p>
+        <p lang="hi">
+          एलआईसी नीमच <strong>ग्राहक-केंद्रित दृष्टिकोण</strong> के माध्यम से निर्बाध बीमा सेवाएं प्रदान करता है, जो <strong>डिजिटल उपकरणों</strong>, मजबूत एजेंट नेटवर्क, और <span class="highlight">नीमच और मंदसौर</span> में ग्रामीण आउटरीच कार्यक्रमों का लाभ उठाता है।
+        </p>
+        <p><strong>Client Onboarding Process:</strong></p>
+        <pre class="diagram">
++--------------------+
+| Client Inquiry     |
++---------+----------+
+          |
+          v
++--------------------+
+| Consultation       |
+| (Jitendra/Agents)  |
++---------+----------+
+          |
+          v
++--------------------+
+| Plan Selection     |
+| (Term, Pension)    |
++---------+----------+
+          |
+          v
++--------------------+
+| Policy Issuance    |
+| (Digital Portal)   |
++--------------------+
+        </pre>
+        <p><strong>Efficient Claims Processing:</strong></p>
+        <pre class="diagram">
++--------------------+
+| Claim Submission   |
++---------+----------+
+          |
+          v
++--------------------+
+| Verification       |
+| (Documents)        |
++---------+----------+
+          |
+          v
++--------------------+
+| Approval           |
+| (98.62% Success)   |
++---------+----------+
+          |
+          v
++--------------------+
+| Payout             |
+| (Bank Transfer)    |
++--------------------+
+        </pre>
+        <p><strong>Rural Outreach Initiatives:</strong></p>
+        <pre class="diagram">
++--------------------+
+| Awareness Camps    |
+| (Sarwaniya, Ratangarh) |
++---------+----------+
+          |
+          v
++--------------------+
+| Micro-Insurance    |
+| (Jeevan Dhara)     |
++---------+----------+
+          |
+          v
++--------------------+
+| Enrollments        |
+| (PMJBY, PMSBY)     |
++--------------------+
+        </pre>
+      </section>
+    </article>
+    <article aria-labelledby="team-heading">
+      <section class="section team-section" id="team" aria-labelledby="team-heading">
+        <h2 id="team-heading">Our Dedicated Team</h2>
+        <p lang="en">
+          With over <strong>150 agents</strong>, <strong>10 supervisors</strong>, and <strong>5 support staff</strong>, LIC Neemuch ensures exceptional service under <span class="highlight">Jitendra Patidar’s</span> leadership.
+        </p>
+        <p lang="hi">
+          <strong>150+ एजेंट</strong>, <strong>10 सुपरवाइज़र</strong>, और <strong>5 सहायक कर्मचारी</strong> के साथ, एलआईसी नीमच <span class="highlight">जितेंद्र पाटीदार</span> के नेतृत्व में उत्कृष्ट सेवा सुनिश्चित करता है।
+        </p>
+        <div class="card-grid">
+          <div class="card">
+            <p><strong>Agents:</strong> 150+ trained professionals</p>
+          </div>
+          <div class="card">
+            <p><strong>Supervisors:</strong> 10 senior experts</p>
+          </div>
+          <div class="card">
+            <p><strong>Support:</strong> 5 dedicated staff</p>
+          </div>
+        </div>
+      </section>
+    </article>
+    <article aria-labelledby="market-heading">
+      <section class="section market-section" id="market" aria-labelledby="market-heading">
+        <h2 id="market-heading">LIC’s Market Dominance</h2>
+        <p lang="en">
+          <strong>LIC of India</strong> leads with a <strong>61.2% premium share</strong> and <strong>₹54.52 trillion</strong> in assets (FY25). LIC Neemuch strengthens this legacy with local expertise.
+        </p>
+        <p lang="hi">
+          <strong>भारतीय जीवन बीमा निगम</strong> <strong>61.2% प्रीमियम हिस्सेदारी</strong> और <strong>₹54.52 लाख करोड़</strong> की संपत्ति (FY25) के साथ अग्रणी है। एलआईसी नीमच स्थानीय विशेषज्ञता के साथ इस विरासत को मजबूत करता है।
+        </p>
+        <table class="data-table table-responsive">
+          <caption>LIC Market Statistics (FY25)</caption>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Premium Share</td>
+              <td>61.2%</td>
+            </tr>
+            <tr>
+              <td>Assets</td>
+              <td>₹54.52 trillion</td>
+            </tr>
+            <tr>
+              <td>Agents</td>
+              <td>13.8 lakh</td>
+            </tr>
+            <tr>
+              <td>Branches</td>
+              <td>2,048</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </article>
+    <article aria-labelledby="social-heading">
+      <section class="section social-section" id="social" aria-labelledby="social-heading">
+        <h2 id="social-heading">Community Engagement</h2>
+        <p lang="en">
+          LIC Neemuch champions <strong>education, healthcare, and financial inclusion</strong> in rural areas like <span class="highlight">Sarwaniya Maharaj</span> near <span class="highlight">Gandhi Sagar Dam</span>.
+        </p>
+        <p lang="hi">
+          एलआईसी नीमच <span class="highlight">गांधी सागर बांध</span> के पास <span class="highlight">सरवानिया महाराज</span> जैसे ग्रामीण क्षेत्रों में <strong>शिक्षा, स्वास्थ्य, और वित्तीय समावेशन</strong> को बढ़ावा देता है।
+        </p>
+        <ul class="benefits-list">
+          <li><strong>75+ Insurance Literacy Camps</strong> in 2023 for rural communities.</li>
+          <li><strong>10,000+ Enrollments</strong> in PMJBY and PMSBY.</li>
+          <li><strong>₹5 Lakh Donated</strong> to healthcare initiatives in 2022.</li>
+        </ul>
+      </section>
+    </article>
+    <article aria-labelledby="testimonials-heading">
+      <section class="section testimonials-section" id="testimonials" aria-labelledby="testimonials-heading">
+        <h2 id="testimonials-heading">Client Testimonials</h2>
+        <p lang="en">
+          Discover why residents trust LIC Neemuch. Share your experience at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
+        </p>
+        <p lang="hi">
+          जानें क्यों निवासी एलआईसी नीमच पर भरोसा करते हैं। अपने अनुभव को <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर साझा करें।
+        </p>
+        ${
+          reviews.length > 0
+            ? `
+              <div class="testimonials-carousel" aria-label="Client testimonials carousel">
+                ${reviews
+                  .map(
+                    (review, index) => `
+                  <div class="testimonial-card" data-index="${index}" ${
+                      index === 0 ? 'style="display: block;"' : 'style="display: none;"'
+                    } >
+                    <div class="review-stars" aria-hidden="true">${renderStars(review.rating)}</div>
+                    <blockquote class="review-body" itemprop="reviewBody">${review.comment}</blockquote>
+                    <cite class="review-author">
+                      <span itemprop="name">${review.username}</span>
+                    </cite>
+                    <meta itemprop="datePublished" content="${
+                      new Date(review.datePublished).toISOString().split('T')[0]
+                    }">
+                    <meta itemprop="reviewRating" content="${review.rating}">
+                  </div>
+                `
+                  )
+                  .join('')}
+              </div>
+              <a href="/reviews" class="cta-button secondary" aria-label="View All Testimonials">View All Testimonials</a>
+            `
+            : '<p lang="en">No testimonials yet. Be the first to share your experience!</p><p lang="hi">अभी तक कोई समीक्षा नहीं। अपनी अनुभव साझा करने वाले पहले व्यक्ति बनें!</p>'
+        }
+      </section>
+    </article>
+    <article aria-labelledby="calculator-heading">
+      <section class="section calculator-section" id="calculator" aria-labelledby="calculator-heading">
+        <h2 id="calculator-heading">Calculate Your Premium</h2>
+        <p lang="en">
+          Use our <strong>premium calculator</strong> to estimate insurance costs. For accurate quotes, contact us at <a href="tel:+917987235207" class="content-link">+91 7987235207</a> or visit <span class="highlight">Vikas Nagar</span>.
+        </p>
+        <p lang="hi">
+          हमारा <strong>प्रीमियम कैलकुलेटर</strong> बीमा लागत का अनुमान लगाने के लिए उपयोग करें। सटीक उद्धरणों के लिए, <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें या <span class="highlight">विकास नगर</span> पर आएं।
+        </p>
+        <div class="calculator-form">
+          <label for="age">Age:</label>
+          <input type="number" id="age" min="18" max="80" placeholder="Enter age" required>
+          <label for="plan-type">Plan Type:</label>
+          <select id="plan-type" required>
+            <option value="term">Term Insurance</option>
+            <option value="pension">Pension Plan</option>
+            <option value="child">Child Plan</option>
+            <option value="ulips">ULIP</option>
+            <option value="micro">Micro-Insurance</option>
+          </select>
+          <label for="sum-assured">Sum Assured (₹):</label>
+          <input type="number" id="sum-assured" min="100000" placeholder="Enter sum assured" required>
+          <button type="button" class="cta-button" onclick="calculatePremium()" aria-label="Calculate Premium">Calculate</button>
+          <p id="calc-result" aria-live="polite"></p>
+        </div>
+      </section>
+    </article>
+    <article aria-labelledby="resources-heading">
+      <section class="section resources-section" id="resources" aria-labelledby="resources-heading">
+        <h2 id="resources-heading">LIC Resources</h2>
+        <p lang="en">
+          Access LIC’s online services through LIC Neemuch to pay premiums or check policy status. For assistance, call <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.
+        </p>
+        <p lang="hi">
+          एलआईसी नीमच के माध्यम से एलआईसी की ऑनलाइन सेवाओं तक पहुंचें, प्रीमियम भुगतान करें या पॉलिसी स्थिति जांचें। सहायता के लिए, <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर कॉल करें।
+        </p>
+        <ul class="benefits-list">
+          <li><a href="https://licindia.in/Online-Payment" target="_blank" rel="noopener noreferrer" class="content-link">Pay Premium Online</a></li>
+          <li><a href="https://licindia.in/Customer-Services" target="_blank" rel="noopener noreferrer" class="content-link">Check Policy Status</a></li>
+          <li><a href="/services" class="content-link">Explore Local Plans</a></li>
+          <li>Contact our branch at <a href="tel:+917987235207" class="content-link">+91 7987235207</a></li>
+        </ul>
+        <a href="/faqs" class="cta-button secondary" aria-label="Explore More Resources">More Resources</a>
+      </section>
+    </article>
+    <article aria-labelledby="contact-heading">
+      <section class="section contact-section" id="contact" aria-labelledby="contact-heading">
+        <h2 id="contact-heading">Get in Touch</h2>
+        <p lang="en">
+          Connect with LIC Neemuch for personalized insurance solutions. Our team is available via phone, WhatsApp, email, or at <span class="highlight">Vikas Nagar, Neemuch</span>. Search <span class="highlight">LIC Neemuch near me</span> to locate us.
+        </p>
+        <p lang="hi">
+          एलआईसी नीमच से विशेष बीमा समाधानों के लिए संपर्क करें। हमारी टीम फोन, व्हाट्सएप, ईमेल, या <span class="highlight">विकास नगर, नीमच</span> पर उपलब्ध है। हमें ढूंढने के लिए <span class="highlight">एलआईसी नीमच मेरे पास</span> खोजें।
+        </p>
+        <div class="contact-info" itemscope itemtype="https://schema.org/ContactPoint">
+          <div class="contact-details">
+            <p>
+              📍 <strong>Address:</strong> <span itemprop="address">Vikas Nagar, Neemuch, MP 458441</span>
+            </p>
+            <p>
+              📞 <strong>Phone:</strong> <a href="tel:+917987235207" class="content-link" aria-label="Call LIC Neemuch" itemprop="telephone">+91 7987235207</a>
+            </p>
+            <p>
+              📧 <strong>Email:</strong> <a href="mailto:licneemuch343@licindia.com" class="content-link" aria-label="Email LIC Neemuch" itemprop="email">licneemuch343@licindia.com</a>
+            </p>
+            <p>
+              📱 <strong>WhatsApp:</strong> <a href="https://wa.me/917987235207" class="content-link" target="_blank" rel="noopener noreferrer" aria-label="Chat with LIC Neemuch">+91 7987235207</a>
+            </p>
+            <p>
+              🏢 <strong>Branch Code:</strong> 343
+            </p>
+            <p>
+              ⏰ <strong>Office Hours:</strong> Monday to Saturday, 10 AM to 5 PM
+            </p>
+          </div>
+          <div class="contact-map">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3622.392!2d74.8742!3d24.4716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3967e7d6c8c0f0c1%3A0x9f0b0f0c0c0c0c0c!2sLIC%20Neemuch%20Branch!5e0!3m2!1sen!2sin!4v1698765432100"
+              width="100%"
+              height="300"
+              style="border:0; border-radius: 10px;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              aria-label="Map of LIC Neemuch Branch, Vikas Nagar"
+            ></iframe>
+          </div>
+        </div>
+        <p lang="en">
+          For urgent assistance, reach LIC’s <strong>24x7 toll-free support</strong> at <a href="tel:+911125750500" class="content-link">+91 1125750500</a>. For local support, visit us near <span class="highlight">Neemuch Railway Station</span>.
+        </p>
+        <p lang="hi">
+          तत्काल सहायता के लिए, एलआईसी के <strong>24x7 टोल-फ्री समर्थन</strong> <a href="tel:+911125750500" class="content-link">+91 1125750500</a> पर संपर्क करें। स्थानीय सहायता के लिए, <span class="highlight">नीमच रेलवे स्टेशन</span> के पास हमसे मिलें।
+        </p>
+        <p lang="en">
+          For advanced queries, contact the <strong>LIC Indore Divisional Office</strong> at <a href="tel:+917312523511" class="content-link">+91 731 252 3511</a> or <a href="mailto:bo_31c@licindia.com" class="content-link">bo_31c@licindia.com</a>.
+        </p>
+        <p lang="hi">
+          उन्नत प्रश्नों के लिए, <strong>एलआईसी इंदौर डिवीजनल कार्यालय</strong> से <a href="tel:+917312523511" class="content-link">+91 731 252 3511</a> या <a href="mailto:bo_31c@licindia.com" class="content-link">bo_31c@licindia.com</a> पर संपर्क करें।
+        </p>
+        <p lang="en">
+          Find us by searching <span class="highlight">LIC Neemuch near me</span>. Our branch is near <span class="highlight">Kileshwar Temple</span>, accessible by auto-rickshaw or taxi.
+        </p>
+        <p lang="hi">
+          <span class="highlight">एलआईसी नीमच मेरे पास</span> खोजकर हमें ढूंढें। हमारी शाखा <span class="highlight">किलेश्वर मंदिर</span> के पास है, ऑटो-रिक्शा या टैक्सी से पहुंचें।
+        </p>
+        <p lang="en">
+          Book a <strong>free consultation</strong> to explore insurance options at <a href="tel:+917987235207" class="content-link">+91 7987235207</a> or <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a>.
+        </p>
+        <p lang="hi">
+          बीमा विकल्पों का पता लगाने के लिए <strong>मुफ्त परामर्श</strong> बुक करें: <a href="tel:+917987235207" class="content-link">+91 7987235207</a> या <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a>।
+        </p>
+        <div class="social-share" aria-label="Share LIC Neemuch Page">
+          <a href="https://x.com/intent/post?url=${encodeURIComponent(pageUrl)}&text=${metaTitle}" target="_blank" rel="noopener noreferrer" aria-label="Post on X">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.4.36a9.1 9.1 0 0 1-2.89 1.1A4.52 4.52 0 0 0 16.5 0c-2.53 0-4.5 2.17-4.5 4.84 0 .38.04.75.12 1.1A12.9 12.9 0 0 1 3 1.67a5.06 5.06 0 0 0-.61 2.44c0 1.69.84 3.18 2.13 4.06a4.47 4.47 0 0 1-2.05-.6v.06c0 2.36 1.64 4.33 3.82 4.78a4.4 4.4 0 0 1-2.04.08 4.49 4.49 0 0 0 4.2 3.13A9.05 9.05 0 0 1 1 20.08 12.73 12.73 0 0 0 8 22c7.55 0 11.68-6.49 11.68-12.11 0-.19 0-.39-.01-.58A8.3 8.3 0 0 0 23 3z"/>
+            </svg>
+          </a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99h-2.54v-2.89h2.54V9.41c0-2.5 1.5-3.89 3.8-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.77l-.44 2.89h-2.33V22C18.34 21.13 22 16.99 22 12z"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/?text=${metaTitle}%20${encodeURIComponent(pageUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp">
+            <svg viewBox="0 0 32 32" aria-hidden="true">
+              <path d="M16.003 2.667C8.64 2.667 2.667 8.64 2.667 16c0 2.82.807 5.46 2.192 7.704L2 30l6.5-2.155A13.29 13.29 0 0 0 16.003 29.333C23.36 29.333 29.333 23.36 29.333 16 29.333 8.64 23.36 2.667 16.003 2.667zM16 26.667c-2.219 0-4.287-.654-6.004-1.77l-.43-.27-3.857 1.278 1.275-3.746-.28-.434A10.653 10.653 0 0 1 5.333 16c0-5.899 4.77-10.667 10.667-10.667S26.667 10.101 26.667 16c0 5.899-4.77 10.667-10.667 10.667zm5.61-8.518c-.307-.154-1.815-.895-2.097-.997-.281-.103-.487-.154-.692.154-.206.308-.793.996-.972 1.202-.18.206-.36.231-.667.077a8.73 8.73 0 0 1-2.564-1.64 9.66 9.66 0 0 1-1.79-2.255c-.187-.308-.02-.475.14-.63.14-.138.308-.359.46-.539.153-.179.205-.308.308-.513.103-.205.051-.385-.026-.539-.077-.154-.692-1.666-.948-2.29-.246-.591-.497-.511-.692-.52-.179-.009-.385-.011-.59-.011-.204 0-.538.077-.82.385s-1.077 1.053-1.077 2.562c0 1.508 1.103 2.964 1.257 3.169.154.205 2.16 3.287 5.24 4.62.733.317 1.305.505 1.75.648.735.233 1.405.200 1.934.122.59-.088 1.815-.741 2.072-1.457.256-.717.256-1.33.179-1.456-.077-.127-.28-.205-.589-.359z"/>
+            </svg>
+          </a>
+          <a href="https://t.me/share/?url=${encodeURIComponent(pageUrl)}&text=${metaTitle}" target="_blank" rel="noopener noreferrer" aria-label="Share on Telegram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9.041 16.23L8.7 20.176c.508 0 .728-.215.996-.473l2.4-2.29 4.973 3.627c.911.5 1.562.24 1.795-.84l3.252-15.26c.29-1.37-.516-1.91-1.392-1.58L2.24 9.31c-1.34.53-1.32 1.3-.23 1.63l5.47 1.71 12.68-7.91c.6-.39 1.14-.18.7.21L9.04 16.23z"/>
+            </svg>
+          </a>
+        </div>
+        <a href="/faqs#contact" class="cta-button" aria-label="Book a Free Consultation with LIC Neemuch">Book Consultation</a>
+      </section>
+    </article>
+    <article aria-labelledby="faq-heading">
+      <section class="section faq-section" id="faq" aria-labelledby="faq-heading">
+        <h2 id="faq-heading">Frequently Asked Questions</h2>
+        <p class="faq-intro" lang="en">
+          Find answers about LIC Neemuch, insurance plans, and support. Contact us at <a href="tel:+917987235207" class="content-link">+91 7987235207</a> for more help.
+        </p>
+        <p class="faq-intro" lang="hi">
+          एलआईसी नीमच, बीमा योजनाओं, और सहायता के बारे में उत्तर ढूंढें। अधिक मदद के लिए <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर कॉल करें।
+        </p>
+        <div class="faq-list">
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-1" aria-controls="answer-1" aria-expanded="false">
+              <span lang="en" class="lang-hidden">What insurance plans are available?</span>
+              <span lang="hi" class="lang-visible">कौन सी बीमा योजनाएं उपलब्ध हैं?</span>
+            </h3>
+            <div class="faq-answer" id="answer-1">
+              <div lang="en" class="lang-hidden">
+                <p>We offer <strong>term insurance</strong>, <strong>pension plans</strong>, <strong>child plans</strong>, <strong>ULIPs</strong>, and <strong>micro-insurance</strong> like Jeevan Dhara. See our <a href="/services" class="content-link">Services page</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p>हम <strong>टर्म बीमा</strong>, <strong>पेंशन योजनाएं</strong>, <strong>चाइल्ड प्लान</strong>, <strong>यूलिप</strong>, और <strong>सूक्ष्म बीमा</strong> जैसे जीवन धारा प्रदान करते हैं। हमारी <a href="/services" class="content-link">सेवाएं पेज</a> देखें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-2" aria-controls="answer-2" aria-expanded="false">
+              <span lang="en" class="lang-hidden">How can I contact customer care?</span>
+              <span lang="hi" class="lang-visible">ग्राहक सेवा से कैसे संपर्क करें?</span>
+            </h3>
+            <div class="faq-answer" id="answer-2">
+              <div lang="en" class="lang-hidden">
+                <p>Reach us at <a href="tel:+917987235207" class="content-link">+91 7987235207</a>, WhatsApp, or <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a>. For 24x7 support, call <a href="tel:+911125750500" class="content-link">+91 1125750500</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p><a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर कॉल करें, व्हाट्सएप करें, या <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a> पर ईमेल करें। 24x7 सहायता के लिए <a href="tel:+911125750500" class="content-link">+91 1125750500</a> पर कॉल करें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-3" aria-controls="answer-3" aria-expanded="false">
+              <span lang="en" class="lang-hidden">What is the branch address?</span>
+              <span lang="hi" class="lang-visible">शाखा का पता क्या है?</span>
+            </h3>
+            <div class="faq-answer" id="answer-3">
+              <div lang="en" class="lang-hidden">
+                <p>Our branch is at <span class="highlight">Vikas Nagar, Neemuch, MP 458441</span>. Call <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p>हमारी शाखा <span class="highlight">विकास नगर, नीमच, एमपी 458441</span> में है। <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर कॉल करें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-4" aria-controls="answer-4" aria-expanded="false">
+              <span lang="en" class="lang-hidden">What is the branch code?</span>
+              <span lang="hi" class="lang-visible">शाखा कोड क्या है?</span>
+            </h3>
+            <div class="faq-answer" id="answer-4">
+              <div lang="en" class="lang-hidden">
+                <p>The branch code is <strong>343</strong>. Use it for policy queries.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p>शाखा कोड <strong>343</strong> है। पॉलिसी प्रश्नों के लिए इसका उपयोग करें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-5" aria-controls="answer-5" aria-expanded="false">
+              <span lang="en" class="lang-hidden">How do I contact the divisional office?</span>
+              <span lang="hi" class="lang-visible">डिवीजनल कार्यालय से कैसे संपर्क करें?</span>
+            </h3>
+            <div class="faq-answer" id="answer-5">
+              <div lang="en" class="lang-hidden">
+                <p>Contact <strong>LIC Indore</strong> at <a href="tel:+917312523511" class="content-link">+91 731 252 3511</a> or <a href="mailto:bo_31c@licindia.com" class="content-link">bo_31c@licindia.com</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p><strong>एलआईसी इंदौर</strong> से <a href="tel:+917312523511" class="content-link">+91 731 252 3511</a> या <a href="mailto:bo_31c@licindia.com" class="content-link">bo_31c@licindia.com</a> पर संपर्क करें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-6" aria-controls="answer-6" aria-expanded="false">
+              <span lang="en" class="lang-hidden">What is LIC’s toll-free number?</span>
+              <span lang="hi" class="lang-visible">एलआईसी का टोल-फ्री नंबर क्या है?</span>
+            </h3>
+            <div class="faq-answer" id="answer-6">
+              <div lang="en" class="lang-hidden">
+                <p>LIC’s <strong>24x7 toll-free number</strong> is <a href="tel:+911125750500" class="content-link">+91 1125750500</a>. For local support, use <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p>एलआईसी का <strong>24x7 टोल-फ्री नंबर</strong> <a href="tel:+911125750500" class="content-link">+91 1125750500</a> है। स्थानीय सहायता के लिए <a href="tel:+917987235207" class="content-link">+91 7987235207</a> का उपयोग करें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-7" aria-controls="answer-7" aria-expanded="false">
+              <span lang="en" class="lang-hidden">How do I find LIC Neemuch?</span>
+              <span lang="hi" class="lang-visible">एलआईसी नीमच कैसे ढूंढें?</span>
+            </h3>
+            <div class="faq-answer" id="answer-7">
+              <div lang="en" class="lang-hidden">
+                <p>Search <span class="highlight">LIC Neemuch near me</span> to find our branch at <span class="highlight">Vikas Nagar</span>, near <span class="highlight">Kileshwar Temple</span>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p><span class="highlight">एलआईसी नीमच मेरे पास</span> खोजें और <span class="highlight">विकास नगर</span> में हमारी शाखा, <span class="highlight">किलेश्वर मंदिर</span> के पास ढूंढें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-8" aria-controls="answer-8" aria-expanded="false">
+              <span lang="en" class="lang-hidden">What is the claim settlement ratio?</span>
+              <span lang="hi" class="lang-visible">दावा निपटान अनुपात क्या है?</span>
+            </h3>
+            <div class="faq-answer" id="answer-8">
+              <div lang="en" class="lang-hidden">
+                <p>Our <strong>claim settlement ratio</strong> is <strong>98.62%</strong> (FY 2020-21).</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p>हमारा <strong>दावा निपटान अनुपात</strong> <strong>98.62%</strong> (वित्त वर्ष 2020-21) है।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-9" aria-controls="answer-9" aria-expanded="false">
+              <span lang="en" class="lang-hidden">How do I pay premiums?</span>
+              <span lang="hi" class="lang-visible">प्रीमियम कैसे भुगतान करें?</span>
+            </h3>
+            <div class="faq-answer" id="answer-9">
+              <div lang="en" class="lang-hidden">
+                <p>Pay online at <a href="https://licindia.in/Online-Payment" target="_blank" rel="noopener noreferrer" class="content-link">licindia.in</a> or visit <span class="highlight">Vikas Nagar</span>. Call <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p><a href="https://licindia.in/Online-Payment" target="_blank" rel="noopener noreferrer" class="content-link">licindia.in</a> पर ऑनलाइन भुगतान करें या <span class="highlight">विकास नगर</span> पर आएं। <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर कॉल करें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-10" aria-controls="answer-10" aria-expanded="false">
+              <span lang="en" class="lang-hidden">Who is the branch manager?</span>
+              <span lang="hi" class="lang-visible">शाखा प्रबंधक कौन है?</span>
+            </h3>
+            <div class="faq-answer" id="answer-10">
+              <div lang="en" class="lang-hidden">
+                <p>Contact <span class="highlight">Jitendra Patidar</span>, Development Officer, at <a href="tel:+917987235207" class="content-link">+91 7987235207</a> or <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p>हमारे डेवलपमेंट ऑफिसर <span class="highlight">जितेंद्र पाटीदार</span> से <a href="tel:+917987235207" class="content-link">+91 7987235207</a> या <a href="mailto:licneemuch343@licindia.com" class="content-link">licneemuch343@licindia.com</a> पर संपर्क करें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-11" aria-controls="answer-11" aria-expanded="false">
+              <span lang="en" class="lang-hidden">Can I join as an agent?</span>
+              <span lang="hi" class="lang-visible">क्या मैं एजेंट के रूप में शामिल हो सकता हूँ?</span>
+            </h3>
+            <div class="faq-answer" id="answer-11">
+              <div lang="en" class="lang-hidden">
+                <p>Become an LIC agent with us. Contact <span class="highlight">Jitendra Patidar</span> at <a href="tel:+917987235207" class="content-link">+91 7987235207</a> or visit our <a href="/join" class="content-link">Join as Agent</a> page.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p>हमारे साथ एलआईसी एजेंट बनें। <span class="highlight">जितेंद्र पाटीदार</span> से <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर संपर्क करें या <a href="/join" class="content-link">एजेंट के रूप में शामिल हों</a> पेज पर जाएं।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-12" aria-controls="answer-12" aria-expanded="false">
+              <span lang="en" class="lang-hidden">What is Bima Sakhi Yojana?</span>
+              <span lang="hi" class="lang-visible">बीमा सखी योजना क्या है?</span>
+            </h3>
+            <div class="faq-answer" id="answer-12">
+              <div lang="en" class="lang-hidden">
+                <p><strong>Bima Sakhi Yojana</strong> empowers women to become LIC agents. Learn more at our <a href="/bimasakhi" class="content-link">Bima Sakhi page</a> or call <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p><strong>बीमा सखी योजना</strong> महिलाओं को एलआईसी एजेंट बनने के लिए सशक्त बनाती है। <a href="/bimasakhi" class="content-link">बीमा सखी पेज</a> पर अधिक जानकारी प्राप्त करें या <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर कॉल करें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-13" aria-controls="answer-13" aria-expanded="false">
+              <span lang="en" class="lang-hidden">How do I file a claim?</span>
+              <span lang="hi" class="lang-visible">दावा कैसे दर्ज करें?</span>
+            </h3>
+            <div class="faq-answer" id="answer-13">
+              <div lang="en" class="lang-hidden">
+                <p>Submit claims at <span class="highlight">Vikas Nagar</span> or online via <a href="https://licindia.in/Customer-Services" target="_blank" rel="noopener noreferrer" class="content-link">licindia.in</a>. Call <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p><span class="highlight">विकास नगर</span> पर या <a href="https://licindia.in/Customer-Services" target="_blank" rel="noopener noreferrer" class="content-link">licindia.in</a> के माध्यम से दावे जमा करें। <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर कॉल करें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-14" aria-controls="answer-14" aria-expanded="false">
+              <span lang="en" class="lang-hidden">What are the office hours?</span>
+              <span lang="hi" class="lang-visible">कार्यालय समय क्या हैं?</span>
+            </h3>
+            <div class="faq-answer" id="answer-14">
+              <div lang="en" class="lang-hidden">
+                <p>Our office at <span class="highlight">Vikas Nagar</span> is open <strong>Monday to Saturday, 10 AM to 5 PM</strong>. Call <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p><span class="highlight">विकास नगर</span> में हमारा कार्यालय <strong>सोमवार से शनिवार, सुबह 10 बजे से शाम 5 बजे</strong> तक खुला है। <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर कॉल करें।</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-question" id="faq-15" aria-controls="answer-15" aria-expanded="false">
+              <span lang="en" class="lang-hidden">Does LIC Neemuch offer online premium payment?</span>
+              <span lang="hi" class="lang-visible">क्या एलआईसी नीमच ऑनलाइन प्रीमियम भुगतान प्रदान करता है?</span>
+            </h3>
+            <div class="faq-answer" id="answer-15">
+              <div lang="en" class="lang-hidden">
+                <p>Pay premiums online at <a href="https://licindia.in/Online-Payment" target="_blank" rel="noopener noreferrer" class="content-link">licindia.in</a>. For help, visit <span class="highlight">Vikas Nagar</span> or call <a href="tel:+917987235207" class="content-link">+91 7987235207</a>.</p>
+              </div>
+              <div lang="hi" class="lang-visible">
+                <p><a href="https://licindia.in/Online-Payment" target="_blank" rel="noopener noreferrer" class="content-link">licindia.in</a> पर प्रीमियम ऑनलाइन भुगतान करें। सहायता के लिए <span class="highlight">विकास नगर</span> पर आएं या <a href="tel:+917987235207" class="content-link">+91 7987235207</a> पर कॉल करें।</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="/faqs" class="cta-button secondary" aria-label="Explore More FAQs">More FAQs</a>
+      </section>
+    </article>
+  </main>
+</div>
+
+      <button class="scroll-to-top" aria-label="Scroll to top" title="Back to top">↑</button>
+
+<footer class="footer" role="contentinfo" itemscope itemtype="https://schema.org/WPFooter">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3 class="footer-heading">About LIC Neemuch</h3>
+      <p lang="en">
+        LIC Neemuch, led by <span class="highlight">Jitendra Patidar</span>, serves over <strong>50,000 policyholders</strong> in <span class="highlight">Neemuch, Manasa, and Mandsaur</span> with trusted <strong>life insurance solutions</strong>.
+      </p>
+      <p lang="hi">
+        एलआईसी नीमच, <span class="highlight">जितेंद्र पाटीदार</span> के नेतृत्व में, <span class="highlight">नीमच, मनासा, और मंदसौर</span> में <strong>50,000+ पॉलिसीधारकों</strong> को विश्वसनीय <strong>जीवन बीमा समाधान</strong> प्रदान करता है।
+      </p>
+    </div>
+    <div class="footer-section">
+      <h3 class="footer-heading">Quick Links</h3>
+      <ul class="footer-links">
+        <li><a href="/services" class="footer-link" aria-label="Explore Insurance Services">Services</a></li>
+        <li><a href="/join" class="footer-link" aria-label="Join as LIC Agent">Join as Agent</a></li>
+        <li><a href="/bimasakhi" class="footer-link" aria-label="Bima Sakhi Yojana">Bima Sakhi</a></li>
+        <li><a href="/faqs" class="footer-link" aria-label="Frequently Asked Questions">FAQs</a></li>
+        <li><a href="/reviews" class="footer-link" aria-label="Customer Reviews">Reviews</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3 class="footer-heading">Contact Us</h3>
+      <p>
+        📍 <span class="highlight">Vikas Nagar, Neemuch, MP 458441</span><br>
+        📞 <a href="tel:+917987235207" class="footer-link" aria-label="Call LIC Neemuch" itemprop="telephone">+91 7987235207</a><br>
+        📧 <a href="mailto:licneemuch343@licindia.com" class="footer-link" aria-label="Email LIC Neemuch" itemprop="email">licneemuch343@licindia.com</a><br>
+        📱 <a href="https://wa.me/917987235207" class="footer-link" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp LIC Neemuch">WhatsApp</a>
+      </p>
+      <p lang="en">Open: Monday–Saturday, 10 AM–5 PM</p>
+      <p lang="hi">खुला: सोमवार–शनिवार, सुबह 10 बजे–शाम 5 बजे</p>
+    </div>
+    <div class="footer-section">
+      <h3 class="footer-heading">Follow Us</h3>
+      <div class="social-share" aria-label="Social media links">
+        <a href="https://x.com/licneemuch" target="_blank" rel="noopener noreferrer" class="social-share" aria-label="Follow LIC Neemuch on X">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.4.36a9.1 9.1 0 0 1-2.89 1.1A4.52 4.52 0 0 0 16.5 0c-2.53 0-4.5 2.17-4.5 4.84 0 .38.04.75.12 1.1A12.9 12.9 0 0 1 3 1.67a5.06 5.06 0 0 0-.61 2.44c0 1.69.84 3.18 2.13 4.06a4.47 4.47 0 0 1-2.05-.6v.06c0 2.36 1.64 4.33 3.82 4.78a4.4 4.4 0 0 1-2.04.08 4.49 4.49 0 0 0 4.2 3.13A9.05 9.05 0 0 1 1 20.08 12.73 12.73 0 0 0 8 22c7.55 0 11.68-6.49 11.68-12.11 0-.19 0-.39-.01-.58A8.3 8.3 0 0 0 23 3z"/>
+          </svg>
+        </a>
+        <a href="https://www.facebook.com/licneemuch" target="_blank" rel="noopener noreferrer" class="social-share" aria-label="Follow LIC Neemuch on Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99h-2.54v-2.89h2.54V9.41c0-2.5 1.5-3.89 3.8-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.77l-.44 2.89h-2.33V22C18.34 21.13 22 16.99 22 12z"/>
+          </svg>
+        </a>
+        <a href="https://wa.me/917987235207" target="_blank" rel="noopener noreferrer" class="social-share" aria-label="Chat with LIC Neemuch on WhatsApp">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M16.003 2.667C8.64 2.667 2.667 8.64 2.667 16c0 2.82.807 5.46 2.192 7.704L2 30l6.5-2.155A13.29 13.29 0 0 0 16.003 29.333C23.36 29.333 29.333 23.36 29.333 16 29.333 8.64 23.36 2.667 16.003 2.667zM16 26.667c-2.219 0-4.287-.654-6.004-1.77l-.43-.27-3.857 1.278 1.275-3.746-.28-.434A10.653 10.653 0 0 1 5.333 16c0-5.899 4.77-10.667 10.667-10.667S26.667 10.101 26.667 16c0 5.899-4.77 10.667-10.667 10.667zm5.61-8.518c-.307-.154-1.815-.895-2.097-.997-.281-.103-.487-.154-.692.154-.206.308-.793.996-.972 1.202-.18.206-.36.231-.667.077a8.73 8.73 0 0 1-2.564-1.64 9.66 9.66 0 0 1-1.79-2.255c-.187-.308-.02-.475.14-.63.14-.138.308-.359.46-.539.153-.179.205-.308.308-.513.103-.205.051-.385-.026-.539-.077-.154-.692-1.666-.948-2.29-.246-.591-.497-.511-.692-.52-.179-.009-.385-.011-.59-.011-.204 0-.538.077-.82.385s-1.077 1.053-1.077 2.562c0 1.508 1.103 2.964 1.257 3.169.154.205 2.16 3.287 5.24 4.62.733.317 1.305.505 1.75.648.735.233 1.405.200 1.934.122.59-.088 1.815-.741 2.072-1.457.256-.717.256-1.33.179-1.456-.077-.127-.28-.205-.589-.359z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p lang="en">&copy; 2025 LIC Neemuch. All rights reserved.</p>
+    <p lang="hi">&copy; 2025 एलआईसी नीमच। सभी अधिकार सुरक्षित।</p>
+    <p>
+      <a href="/privacy" class="footer-link" aria-label="Privacy Policy">Privacy Policy</a> |
+      <a href="/terms" class="footer-link" aria-label="Terms of Service">Terms of Service</a>
+    </p>
+  </div>
+</footer>
 `;
 
     const html = `
@@ -1867,7 +1499,32 @@ const htmlContent = `
             align-items: center;
             gap: 1rem;
           }
-    
+
+ .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none;
+            transition: var(--transition);
+            z-index: 1000;
+          }
+
+          .scroll-to-top:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+          }
+
+          .scroll-to-top.visible {
+            display: block;
+          }
           .nav-logo {
             color: var(--accent-color);
             text-decoration: none;
@@ -2954,216 +2611,109 @@ const htmlContent = `
             }
           }
         </style>
-         <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Language Toggle Functionality
-      function toggleLanguage() {
-        const currentLang = localStorage.getItem('preferredLanguage') || 'hi';
-        const newLang = currentLang === 'en' ? 'hi' : 'en';
-        
-        // Update visibility of language-specific elements
-        document.querySelectorAll('[lang="en"]').forEach(el => {
-          el.classList.toggle('lang-hidden', newLang !== 'en');
-          el.classList.toggle('lang-visible', newLang === 'en');
-        });
-        document.querySelectorAll('[lang="hi"]').forEach(el => {
-          el.classList.toggle('lang-hidden', newLang !== 'hi');
-          el.classList.toggle('lang-visible', newLang === 'hi');
-        });
+        <script>
+          // Navigation and sidebar toggle
+          document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const sidebarNav = document.querySelector('.sidebar-nav');
+            const links = document.querySelectorAll('a[href^="#"]');
+    
+            navToggle.addEventListener('click', () => {
+              const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+              navToggle.setAttribute('aria-expanded', !expanded);
+              navMenu.classList.toggle('active');
+            });
+    
+            sidebarToggle.addEventListener('click', () => {
+              const expanded = sidebarToggle.getAttribute('aria-expanded') === 'true';
+              sidebarToggle.setAttribute('aria-expanded', !expanded);
+              sidebarNav.classList.toggle('active');
+              sidebarToggle.querySelector('.sidebar-toggle-icon').textContent = expanded ? '☰' : '✕';
+            });
+    
+            // Smooth scrolling
+            links.forEach(link => {
+              link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.startsWith('#')) {
+                  e.preventDefault();
+                  const target = document.querySelector(href);
+                  if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    history.pushState(null, null, href);
+                  }
+                  if (navMenu.classList.contains('active')) {
+                    navToggle.click();
+                  }
+                  if (sidebarNav.classList.contains('active')) {
+                    sidebarToggle.click();
+                  }
+                }
+              });
+            });
+            // Scroll-to-top button
+            const scrollToTop = document.querySelector('.scroll-to-top');
+            window.addEventListener('scroll', () => {
+              scrollToTop.classList.toggle('visible', window.scrollY > 300);
+            });
+            scrollToTop?.addEventListener('click', () => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
 
-        // Update language button text and data-lang attribute
-        const langBtn = document.querySelector('.lang-btn');
-        if (langBtn) {
-          langBtn.textContent = newLang === 'en' ? 'हिन्दी' : 'English';
-          langBtn.setAttribute('data-lang', newLang);
-        }
-
-        // Save language preference
-        localStorage.setItem('preferredLanguage', newLang);
-      }
-
-      // Initialize language
-      function initializeLanguage() {
-        const savedLang = localStorage.getItem('preferredLanguage') || 'hi';
-        document.querySelectorAll('[lang="en"]').forEach(el => {
-          el.classList.toggle('lang-hidden', savedLang !== 'en');
-          el.classList.toggle('lang-visible', savedLang === 'en');
-        });
-        document.querySelectorAll('[lang="hi"]').forEach(el => {
-          el.classList.toggle('lang-hidden', savedLang !== 'hi');
-          el.classList.toggle('lang-visible', savedLang === 'hi');
-        });
-
-        // Set initial language button text
-        const langBtn = document.querySelector('.lang-btn');
-        if (langBtn) {
-          langBtn.textContent = savedLang === 'en' ? 'हिन्दी' : 'English';
-          langBtn.setAttribute('data-lang', savedLang);
-        }
-      }
-
-      // Call initializeLanguage on load
-      initializeLanguage();
-
-      // Attach language toggle event
-      const langBtn = document.querySelector('.lang-btn');
-      if (langBtn) {
-        langBtn.addEventListener('click', toggleLanguage);
-      }
-
-      // Navbar Toggle for Mobile
-      const navToggle = document.querySelector('.nav-toggle');
-      const navMenu = document.querySelector('.nav-menu');
-      if (navToggle && navMenu) {
-        navToggle.addEventListener('click', () => {
-          const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
-          navToggle.setAttribute('aria-expanded', !isExpanded);
-          navMenu.classList.toggle('active');
-        });
-      }
-
-      // Sidebar Toggle for Mobile
-      const sidebarToggle = document.querySelector('.sidebar-toggle');
-      const sidebarNav = document.querySelector('.sidebar-nav');
-      if (sidebarToggle && sidebarNav) {
-        sidebarToggle.addEventListener('click', () => {
-          const isExpanded = sidebarToggle.getAttribute('aria-expanded') === 'true';
-          sidebarToggle.setAttribute('aria-expanded', !isExpanded);
-          sidebarNav.classList.toggle('active');
-        });
-      }
-
-      // Smooth Scrolling for Anchor Links
-      document.querySelectorAll('.sidebar-link, .nav-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          const href = link.getAttribute('href');
-          if (href.startsWith('#')) {
-            e.preventDefault();
-            const targetId = href.substring(1);
-            const targetElement = document.querySelector('#' + targetId);
-            if (targetElement) {
-              targetElement.scrollIntoView({ behavior: 'smooth' });
-              // Update active link
-              document.querySelectorAll('.sidebar-link, .nav-link').forEach(l => l.classList.remove('active'));
-              link.classList.add('active');
-            } else {
-              console.warn('Element with ID ' + targetId + ' not found');
-            }
-          }
-        });
-      });
-
-      // Intersection Observer for Sidebar Active Link
-      const sections = document.querySelectorAll('section[id]');
-      const sidebarLinks = document.querySelectorAll('.sidebar-link');
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.3
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const sectionId = entry.target.getAttribute('id');
-            sidebarLinks.forEach(link => {
-              link.classList.remove('active');
-              if (link.getAttribute('href') === '#' + sectionId) {
-                link.classList.add('active');
+     // FAQ toggle functionality
+          document.querySelectorAll('.faq-question').forEach(function(question) {
+            question.addEventListener('click', function() {
+              var answer = document.getElementById(question.getAttribute('aria-controls'));
+              if (answer) {
+                var isExpanded = question.getAttribute('aria-expanded') === 'true';
+                answer.classList.toggle('active');
+                question.classList.toggle('active');
+                question.setAttribute('aria-expanded', !isExpanded);
               }
             });
-          }
-        });
-      }, observerOptions);
-
-      sections.forEach(section => observer.observe(section));
-
-      // FAQ Accordion
-      const faqQuestions = document.querySelectorAll('.faq-question');
-      faqQuestions.forEach(question => {
-        question.addEventListener('click', () => {
-          const faqItem = question.parentElement;
-          const faqAnswer = faqItem.querySelector('.faq-answer');
-          const isActive = faqAnswer.classList.contains('active');
-
-          // Close all FAQs
-          document.querySelectorAll('.faq-answer').forEach(answer => answer.classList.remove('active'));
-          document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
-
-          // Toggle current FAQ
-          if (!isActive) {
-            faqAnswer.classList.add('active');
-            question.classList.add('active');
-          }
-        });
-      });
-
-      // Carousel
-      const carousel = document.querySelector('.carousel');
-      const carouselItems = document.querySelectorAll('.carousel-item');
-      const carouselDots = document.querySelectorAll('.carousel-dot');
-      const prevBtn = document.querySelector('.carousel-btn.prev');
-      const nextBtn = document.querySelector('.carousel-btn.next');
-      let currentIndex = 0;
-
-      function updateCarousel() {
-        carousel.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
-        carouselDots.forEach(dot => dot.classList.remove('active'));
-        carouselDots[currentIndex].classList.add('active');
-      }
-
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-          currentIndex = currentIndex > 0 ? currentIndex - 1 : carouselItems.length - 1;
-          updateCarousel();
-        });
-      }
-
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-          currentIndex = currentIndex < carouselItems.length - 1 ? currentIndex + 1 : 0;
-          updateCarousel();
-        });
-      }
-
-      carouselDots.forEach(dot => {
-        dot.addEventListener('click', () => {
-          currentIndex = parseInt(dot.getAttribute('data-index'));
-          updateCarousel();
-        });
-      });
-
-      // Auto-slide every 5 seconds
-      let autoSlide = setInterval(() => {
-        currentIndex = currentIndex < carouselItems.length - 1 ? currentIndex + 1 : 0;
-        updateCarousel();
-      }, 5000);
-
-      // Pause auto-slide on hover
-      if (carousel) {
-        carousel.addEventListener('mouseenter', () => clearInterval(autoSlide));
-        carousel.addEventListener('mouseleave', () => {
-          autoSlide = setInterval(() => {
-            currentIndex = currentIndex < carouselItems.length - 1 ? currentIndex + 1 : 0;
-            updateCarousel();
-          }, 5000);
-        });
-      }
-
+          });
+            // Highlight active section
+            const sections = document.querySelectorAll('section[id]');
+            const observer = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    links.forEach((link) => {
+                      const isActive = link.getAttribute('href') === \`#\${id}\`;
+                      if (isActive) {
+                        link.classList.add('active');
+                      } else {
+                        link.classList.remove('active');
+                      }
+                    });
+                  }
+                });
+              },
+              { rootMargin: '-100px 0px -100px 0px' }
+            );
+            sections.forEach((section) => observer.observe(section));
+  
+            // Testimonial carousel
+            const cards = document.querySelectorAll('.testimonial-card');
+            if (cards.length > 0) {
+              let current = 0;
+              setInterval(() => {
+                cards[current].style.display = 'none';
+                current = (current + 1) % cards.length;
+                cards[current].style.display = 'block';
+              }, 5000);
+            }
     
-
-      // Navbar Scroll Effect
-      const navbar = document.querySelector('.navbar');
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
-      });
-    });
-
-       // Premium calculator
+            // Navbar scroll effect
+            window.addEventListener('scroll', () => {
+              const navbar = document.querySelector('.navbar');
+              navbar.classList.toggle('scrolled', window.scrollY > 0);
+            });
+    
+            // Premium calculator
             window.calculatePremium = function() {
               const age = parseInt(document.getElementById('age').value);
               const planType = document.getElementById('plan-type').value;
@@ -3191,8 +2741,7 @@ const htmlContent = `
               result.style.color = 'var(--secondary-color)';
             };
           });
-  </script>
-
+        </script>
       </head>
       <body>
         <div id="root">${htmlContent}</div>
@@ -3206,8 +2755,7 @@ const htmlContent = `
     res.setHeader('Cache-Control', 'public, max-age=3600');
     res.status(200).send(html);
     console.log('SSR Response sent for / at', new Date().toISOString());
-  } // <-- add this closing parenthesis for the async function
-  catch (error) {
+  } catch (error) {
     console.error('SSR Error:', error.stack);
     res.status(500).send(`
       <!DOCTYPE html>
